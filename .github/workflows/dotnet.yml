@@ -19,7 +19,10 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: dotnet restore
+    - name: NerdBank.GitVersioning
+      id: nbgv
+      uses: dotnet/nbgv@v0.3.1
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SimpleVersion}}-alpha --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal

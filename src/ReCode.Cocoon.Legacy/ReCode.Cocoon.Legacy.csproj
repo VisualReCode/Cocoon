@@ -4,6 +4,12 @@
     <TargetFramework>net45</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>ReCode.Cocoon.Legacy</PackageId>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="1.9.11" />
   </ItemGroup>
