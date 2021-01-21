@@ -6,7 +6,6 @@
   
   <PropertyGroup>
     <PackageId>ReCode.Cocoon.Proxy</PackageId>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 

@@ -3,8 +3,8 @@ name: .NET
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
 
 jobs:
   build:
@@ -29,3 +29,9 @@ jobs:
       run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SimpleVersion}}-alpha --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: PackLegacy
+      run: dotnet pack --configuration Release --no-build --output . src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj
+    - name: PackProxy
+      run: dotnet pack --configuration Release --no-build --output . src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj
+    - name: Push
+      run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
