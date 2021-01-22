@@ -11,12 +11,12 @@ using Microsoft.Extensions.Logging;
 
 namespace ReCode.Cocoon.Proxy.Authentication
 {
-    public class AuthenticationClient
+    public class CocoonAuthenticationClient
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger<AuthenticationClient> _logger;
+        private readonly ILogger<CocoonAuthenticationClient> _logger;
 
-        public AuthenticationClient(HttpClient httpClient, ILogger<AuthenticationClient> logger)
+        public CocoonAuthenticationClient(HttpClient httpClient, ILogger<CocoonAuthenticationClient> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
@@ -43,7 +43,7 @@ namespace ReCode.Cocoon.Proxy.Authentication
                 {
                     var stream = await response.Content.ReadAsStreamAsync();
                     var claimsPrincipal = await DeserializePrincipal(stream);
-                    var ticket = new AuthenticationTicket(claimsPrincipal, FacadeAuthenticationDefaults.Scheme);
+                    var ticket = new AuthenticationTicket(claimsPrincipal, CocoonAuthenticationDefaults.Scheme);
                     return AuthenticateResult.Success(ticket);
                 }
 

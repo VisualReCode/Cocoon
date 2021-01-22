@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using System.Web;
 using System.Web.SessionState;
@@ -45,14 +46,48 @@ namespace ReCode.Cocoon.Legacy.Session
             {
                 case string str:
                     return Encoding.UTF8.GetBytes(str);
+                case short i16:
+                    return BitConverter.GetBytes(i16);
                 case int i32:
                     return BitConverter.GetBytes(i32);
                 case long i64:
                     return BitConverter.GetBytes(i64);
+                case ushort u16:
+                    return BitConverter.GetBytes(u16);
+                case uint u32:
+                    return BitConverter.GetBytes(u32);
+                case ulong u64:
+                    return BitConverter.GetBytes(u64);
+                case char c:
+                    return BitConverter.GetBytes(c);
+                case bool b:
+                    return BitConverter.GetBytes(b);
+                case float f:
+                    return BitConverter.GetBytes(f);
+                case double d:
+                    return BitConverter.GetBytes(d);
+                case byte b:
+                    return new[] {b};
+                case sbyte sb:
+                    return new[] {(byte)sb};
                 default:
                     return MessagePackSerializer.Serialize(value, ContractlessStandardResolver.Instance);
             }
         }
+        
+        private static byte[] DecimalToBytes(decimal value)
+        {
+            return Encoding.UTF8.GetBytes(value.ToString(CultureInfo.InvariantCulture));
+        }
+        
+        private static sbyte ToSByte(byte b)
+        {
+            unchecked
+            {
+                return (sbyte) b;
+            }
+        }
+
 
         public bool IsReusable => true;
     }

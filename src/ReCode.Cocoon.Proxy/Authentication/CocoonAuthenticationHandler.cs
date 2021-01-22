@@ -8,11 +8,11 @@ using Microsoft.Extensions.Options;
 
 namespace ReCode.Cocoon.Proxy.Authentication
 {
-    public class FacadeAuthenticationHandler : AuthenticationHandler<FacadeAuthenticationOptions>
+    public class CocoonAuthenticationHandler : AuthenticationHandler<CocoonAuthenticationOptions>
     {
-        private readonly AuthenticationClient _client;
+        private readonly CocoonAuthenticationClient _client;
 
-        public FacadeAuthenticationHandler(AuthenticationClient client, IOptionsMonitor<FacadeAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+        public CocoonAuthenticationHandler(CocoonAuthenticationClient client, IOptionsMonitor<CocoonAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
             _client = client;

@@ -8,11 +8,20 @@ namespace ReCode.Cocoon.Proxy.Proxy
 {
     internal class RedirectTransformer : HttpTransformer
     {
+        private readonly Uri _destinationPrefix;
+
+        public RedirectTransformer(Uri destinationPrefix)
+        {
+            _destinationPrefix = destinationPrefix;
+        }
+
         public override async Task TransformResponseAsync(HttpContext context, HttpResponseMessage response)
         {
-            if (response.Headers.Location?.IsAbsoluteUri == true)
+            var location = response.Headers.Location;
+            
+            if (location?.IsAbsoluteUri == true && _destinationPrefix.IsBaseOf(location))
             {
-                var relative = response.Headers.Location.PathAndQuery;
+                var relative = location.PathAndQuery;
                 response.Headers.Location = new Uri(relative, UriKind.Relative);
             }
             await base.TransformResponseAsync(context, response);
