@@ -35,32 +35,14 @@ namespace ReCode.Cocoon.Proxy.Session
             [typeof(double)] = bytes => BitConverter.ToDouble(bytes),
             [typeof(byte)] = bytes => bytes[0],
             [typeof(sbyte)] = bytes => ToSByte(bytes[0]),
-            [typeof(decimal)] = bytes => BytesToDecimal(bytes),
         };
 
-        private static decimal BytesToDecimal(byte[] bytes) =>
-            Utf8Parser.TryParse(bytes, out decimal value, out _) ? value : throw InvalidType();
-        
         private static sbyte ToSByte(byte b)
         {
             unchecked
             {
                 return (sbyte) b;
             }
-        }
-
-        private static DateTimeOffset BytesToDateTimeOffset(Span<byte> bytes) =>
-            Utf8Parser.TryParse(bytes, out DateTimeOffset value, out _, 'O') ? value : throw InvalidType();
-
-        private static DateTime BytesToDateTime(Span<byte> bytes) =>
-            Utf8Parser.TryParse(bytes, out DateTime value, out _, 'O') ? value : throw InvalidType();
-
-        private static TimeSpan BytesToTimeSpan(Span<byte> bytes) =>
-            Utf8Parser.TryParse(bytes, out TimeSpan value, out _, 'G') ? value : throw InvalidType();
-
-        private static Exception InvalidType()
-        {
-            return new ArgumentException("Invalid value.");
         }
     }
 }
