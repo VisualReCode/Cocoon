@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Proxy", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Legacy", "src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj", "{9D13A8F6-22D1-477C-B59E-DEC06995E0A1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{52EA03A8-55D8-4684-9E04-7F55EEBACF37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Legacy.Tests", "test\ReCode.Cocoon.Legacy.Tests\ReCode.Cocoon.Legacy.Tests.csproj", "{9F7913A0-4556-4D38-8407-61F8F395721E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,9 +50,22 @@ Global
 		{9D13A8F6-22D1-477C-B59E-DEC06995E0A1}.Release|x64.Build.0 = Release|Any CPU
 		{9D13A8F6-22D1-477C-B59E-DEC06995E0A1}.Release|x86.ActiveCfg = Release|Any CPU
 		{9D13A8F6-22D1-477C-B59E-DEC06995E0A1}.Release|x86.Build.0 = Release|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Debug|x64.Build.0 = Debug|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Debug|x86.Build.0 = Debug|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Release|x64.ActiveCfg = Release|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Release|x64.Build.0 = Release|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F7913A0-4556-4D38-8407-61F8F395721E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{21676F21-B2BB-4D3B-86EC-99D57BA3B024} = {0E307CDC-C426-4BC9-A014-5E758957C1D2}
 		{9D13A8F6-22D1-477C-B59E-DEC06995E0A1} = {0E307CDC-C426-4BC9-A014-5E758957C1D2}
+		{9F7913A0-4556-4D38-8407-61F8F395721E} = {52EA03A8-55D8-4684-9E04-7F55EEBACF37}
 	EndGlobalSection
 EndGlobal

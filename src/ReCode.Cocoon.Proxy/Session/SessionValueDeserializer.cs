@@ -9,7 +9,6 @@ namespace ReCode.Cocoon.Proxy.Session
 {
     internal static class SessionValueDeserializer
     {
-        
         public static object Deserialize<T>(byte[] bytes)
         {
             if (Deserializers.TryGetValue(typeof(T), out var deserializer))
@@ -35,6 +34,10 @@ namespace ReCode.Cocoon.Proxy.Session
             [typeof(double)] = bytes => BitConverter.ToDouble(bytes),
             [typeof(byte)] = bytes => bytes[0],
             [typeof(sbyte)] = bytes => ToSByte(bytes[0]),
+            [typeof(decimal)] = bytes => GetDecimal(bytes),
+            [typeof(DateTimeOffset)] = bytes => GetDateTimeOffset(bytes),
+            [typeof(DateTime)] = bytes => GetDateTime(bytes),
+            [typeof(TimeSpan)] = bytes => GetTimeSpan(bytes),
         };
 
         private static sbyte ToSByte(byte b)
@@ -43,6 +46,34 @@ namespace ReCode.Cocoon.Proxy.Session
             {
                 return (sbyte) b;
             }
+        }
+        
+        public static DateTimeOffset GetDateTimeOffset(Span<byte> bytes)
+        {
+            return Utf8Parser.TryParse(bytes, out DateTimeOffset value, out _, 'O')
+                ? value
+                : throw new InvalidOperationException("Value was not a DateTimeOffset");
+        }
+        
+        public static DateTime GetDateTime(Span<byte> bytes)
+        {
+            return Utf8Parser.TryParse(bytes, out DateTime value, out _, 'O')
+                ? value
+                : throw new InvalidOperationException("Value was not a DateTime");
+        }
+        
+        public static TimeSpan GetTimeSpan(Span<byte> bytes)
+        {
+            return Utf8Parser.TryParse(bytes, out TimeSpan value, out _, 'c')
+                ? value
+                : throw new InvalidOperationException("Value was not a TimeSpan");
+        }
+        
+        public static decimal GetDecimal(Span<byte> bytes)
+        {
+            return Utf8Parser.TryParse(bytes, out decimal value, out _, 'G')
+                ? value
+                : throw new InvalidOperationException("Value was not a decimal");
         }
     }
 }

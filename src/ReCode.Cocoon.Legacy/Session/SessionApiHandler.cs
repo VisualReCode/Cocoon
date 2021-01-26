@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Buffers;
+using System.Buffers.Text;
 using System.Globalization;
 using System.Text;
 using System.Web;
@@ -70,6 +72,14 @@ namespace ReCode.Cocoon.Legacy.Session
                     return new[] {b};
                 case sbyte sb:
                     return new[] {(byte)sb};
+                case decimal d:
+                    return ValueSerializer.ToBytes(d);
+                case DateTimeOffset dto:
+                    return ValueSerializer.ToBytes(dto);
+                case DateTime dt:
+                    return ValueSerializer.ToBytes(dt);
+                case TimeSpan ts:
+                    return ValueSerializer.ToBytes(ts);
                 default:
                     return MessagePackSerializer.Serialize(value, ContractlessStandardResolver.Instance);
             }
@@ -88,6 +98,12 @@ namespace ReCode.Cocoon.Legacy.Session
             }
         }
 
+        private static byte[] ToBytes(DateTimeOffset value)
+        {
+            var bytes = new byte[20];
+            Utf8Formatter.TryFormat(value, bytes, out int written, new StandardFormat('O'));
+            return bytes;
+        }
 
         public bool IsReusable => true;
     }
