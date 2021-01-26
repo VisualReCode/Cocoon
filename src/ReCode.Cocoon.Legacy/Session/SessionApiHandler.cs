@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Buffers;
-using System.Buffers.Text;
 using System.Globalization;
 using System.Text;
 using System.Web;
@@ -96,13 +94,6 @@ namespace ReCode.Cocoon.Legacy.Session
             {
                 return (sbyte) b;
             }
-        }
-
-        private static byte[] ToBytes(DateTimeOffset value)
-        {
-            var bytes = new byte[20];
-            Utf8Formatter.TryFormat(value, bytes, out int written, new StandardFormat('O'));
-            return bytes;
         }
 
         public bool IsReusable => true;
