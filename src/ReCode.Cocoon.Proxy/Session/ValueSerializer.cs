@@ -6,7 +6,7 @@ using MessagePack.Resolvers;
 // using System.Buffers;
 // using System.Buffers.Text;
 
-namespace ReCode.Cocoon.Legacy.Session
+namespace ReCode.Cocoon.Proxy.Session
 {
     public static class ValueSerializer
     {
@@ -49,7 +49,7 @@ namespace ReCode.Cocoon.Legacy.Session
                 case TimeSpan ts:
                     return ToBytes(ts);
                 default:
-                    return MessagePackSerializer.Serialize(value, ContractlessStandardResolver.Instance);
+                    return MessagePackSerializer.Serialize(value, ContractlessStandardResolver.Options);
             }
         }
         public static byte[] ToBytes(DateTimeOffset value)

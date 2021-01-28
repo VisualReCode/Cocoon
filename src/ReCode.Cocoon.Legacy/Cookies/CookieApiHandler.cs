@@ -1,15 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Web;
 using System.Web.SessionState;
 
-namespace ReCode.Cocoon.Legacy.Session
+namespace ReCode.Cocoon.Legacy.Cookies
 {
-    public class SessionApiHandler : IHttpHandler, IRequiresSessionState
+    public class CookieApiHandler : IHttpHandler, IRequiresSessionState
     {
         public void ProcessRequest(HttpContext context)
         {
-            if (!string.Equals(context.Request.Path, "/facadesession"))
+            if (!string.Equals(context.Request.Path, "/facadecookies"))
             {
                 return;
             }
@@ -29,44 +30,31 @@ namespace ReCode.Cocoon.Legacy.Session
             }
             else if ("PUT".Equals(context.Request.HttpMethod, StringComparison.OrdinalIgnoreCase))
             {
-                var typeName = context.Request.QueryString["type"];
-                if (string.IsNullOrEmpty(key))
-                {
-                    // Bad request
-                    context.Response.StatusCode = 400;
-                    return;
-                }
-                SetValue(context, key, typeName);
+                SetValue(context, key);
             }
         }
 
-        private static void SetValue(HttpContext context, string key, string typeName)
+        private static void SetValue(HttpContext context, string key)
         {
-            var type = Type.GetType(typeName);
-
-            var stream = context.Request.GetBufferlessInputStream();
-            var bytes = new byte[128];
-            var read = stream.Read(bytes, 0, 128);
-            Array.Resize(ref bytes, read);
-
-            if (type == typeof(int))
-            {
-                var value = BitConverter.ToInt32(bytes, 0);
-                context.Session[key] = value;
-            }
+            var stream = context.Request.GetBufferedInputStream();
+            var reader = new StreamReader(stream);
+            var value = reader.ReadToEnd();
+            context.Response.Cookies.Set(new HttpCookie(key, value));
+            context.Response.StatusCode = 200;
+            context.Response.End();
         }
 
         private static void GetValue(HttpContext context, string key)
         {
-            var value = context.Session[key];
-            if (value is null)
+            var cookie = context.Request.Cookies.Get(key);
+            if (cookie is null)
             {
                 // Not found
                 context.Response.StatusCode = 404;
                 return;
             }
 
-            var bytes = ValueSerializer.Serialize(value);
+            var bytes = Encoding.UTF8.GetBytes(cookie.Value);
 
             context.Response.BinaryWrite(bytes);
             context.Response.StatusCode = 200;

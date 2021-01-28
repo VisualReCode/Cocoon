@@ -25,11 +25,27 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
         protected override Task HandleChallengeAsync(AuthenticationProperties properties)
         {
+            if (string.IsNullOrEmpty(Options.LoginUrl))
+            {
+                return base.HandleChallengeAsync(properties);
+            }
+            if (Options.LoginUrl.Contains("{{ReturnUrl}}", StringComparison.OrdinalIgnoreCase))
+            {
+                Response.Headers["Location"] = CreateLoginReturnUrl();
+            }
+            else
+            {
+                Response.Headers["Location"] = Options.LoginUrl;
+            }
+            Response.StatusCode = 302;
+            return Task.CompletedTask;
+        }
+
+        private string CreateLoginReturnUrl()
+        {
             var relativeUri = Request.GetEncodedPathAndQuery();
             var escaped = Uri.EscapeDataString(relativeUri);
-            Response.StatusCode = 302;
-            Response.Headers["Location"] = $"/Account/Login?ReturnUrl={escaped}";
-            return Task.CompletedTask;
+            return Options.LoginUrl.Replace("{{ReturnUrl}}", escaped, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
