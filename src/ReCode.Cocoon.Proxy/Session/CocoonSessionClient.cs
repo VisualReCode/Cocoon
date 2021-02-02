@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,21 +17,17 @@ namespace ReCode.Cocoon.Proxy.Session
             _client = client;
         }
 
-        public async Task<object> GetAsync<T>(string key, HttpRequest request)
+        public async Task<byte[]> GetAsync(string key, HttpRequest request)
         {
             var message = CreateMessage(key, request, HttpMethod.Get, $"?key={key}");
 
-            var response = await _client.SendAsync(message);
+            using var response = await _client.SendAsync(message);
             if (!response.IsSuccessStatusCode)
             {
                 return default;
             }
 
-            var bytes = await response.Content.ReadAsByteArrayAsync();
-
-            var value = SessionValueDeserializer.Deserialize<T>(bytes);
-            
-            return value;
+            return await response.Content.ReadAsByteArrayAsync();
         }
 
         public async Task SetAsync(string key, object value, Type type, HttpRequest request)
@@ -40,6 +37,19 @@ namespace ReCode.Cocoon.Proxy.Session
             var message = CreateMessage(key, request, HttpMethod.Put, uri);
 
             var bytes = ValueSerializer.Serialize(value);
+
+            MemoryPool<byte>.Shared.Rent(100);
+
+            message.Content = new ByteArrayContent(bytes);
+
+            await _client.SendAsync(message);
+        }
+
+        public async Task SetAsync(string key, byte[] bytes, Type type, HttpRequest request)
+        {
+            var uri = $"?key={key}&type={type.AssemblyQualifiedName}";
+            
+            var message = CreateMessage(key, request, HttpMethod.Put, uri);
 
             message.Content = new ByteArrayContent(bytes);
 

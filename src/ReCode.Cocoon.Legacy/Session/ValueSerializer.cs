@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Text;
 using MessagePack;
 using MessagePack.Resolvers;
@@ -49,9 +50,20 @@ namespace ReCode.Cocoon.Legacy.Session
                 case TimeSpan ts:
                     return ToBytes(ts);
                 default:
-                    return MessagePackSerializer.Serialize(value, ContractlessStandardResolver.Instance);
+                    return MessagePack(value);
             }
         }
+
+        private static byte[] MessagePack(object value)
+        {
+            if (value.GetType().GetCustomAttribute(typeof(MessagePackObjectAttribute)) != null)
+            {
+                return MessagePackSerializer.Serialize(value);
+            }
+
+            return MessagePackSerializer.Serialize(value, ContractlessStandardResolver.Instance);
+        }
+
         public static byte[] ToBytes(DateTimeOffset value)
         {
             return Encoding.UTF8.GetBytes(value.ToString("O"));

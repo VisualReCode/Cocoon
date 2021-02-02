@@ -44,16 +44,18 @@ namespace ReCode.Cocoon.Legacy.Session
         {
             var type = Type.GetType(typeName);
 
+            if (type is null)
+            {
+                return;
+            }
+
             var stream = context.Request.GetBufferlessInputStream();
             var bytes = new byte[128];
             var read = stream.Read(bytes, 0, 128);
             Array.Resize(ref bytes, read);
 
-            if (type == typeof(int))
-            {
-                var value = BitConverter.ToInt32(bytes, 0);
-                context.Session[key] = value;
-            }
+            var value = SessionValueDeserializer.Deserialize(type, bytes);
+            context.Session[key] = value;
         }
 
         private static void GetValue(HttpContext context, string key)

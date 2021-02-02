@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
+using System.Reflection;
 using System.Text;
 using MessagePack;
 using MessagePack.Resolvers;
@@ -8,14 +11,18 @@ namespace ReCode.Cocoon.Legacy.Session
 {
     internal static class SessionValueDeserializer
     {
-        public static object Deserialize<T>(byte[] bytes)
+        private static readonly ConcurrentDictionary<Type, Func<byte[], object>> Unpackers =
+            new ConcurrentDictionary<Type, Func<byte[], object>>();
+
+        public static object Deserialize(Type type, byte[] bytes)
         {
-            if (Deserializers.TryGetValue(typeof(T), out var deserializer))
+            if (Deserializers.TryGetValue(type, out var deserializer))
             {
                 return deserializer(bytes);
             }
 
-            return MessagePackSerializer.Deserialize<T>(bytes, ContractlessStandardResolver.Instance);
+            var func = Unpackers.GetOrAdd(type, CreateUnpackMethod);
+            return func(bytes);
         }
 
         private static readonly Dictionary<Type, Func<byte[], object>> Deserializers = new Dictionary<Type, Func<byte[], object>>
@@ -69,6 +76,28 @@ namespace ReCode.Cocoon.Legacy.Session
         {
             var str = Encoding.UTF8.GetString(bytes);
             return decimal.Parse(str);
+        }
+
+        private static object Unpack<T>(byte[] bytes)
+        {
+            return MessagePackSerializer.Deserialize<T>(bytes);
+        }
+
+        private static object UnpackContractless<T>(byte[] bytes)
+        {
+            return MessagePackSerializer.Deserialize<T>(bytes, ContractlessStandardResolver.Instance);
+        }
+
+        private static Func<byte[], object> CreateUnpackMethod(Type type)
+        {
+            var methodName = type.GetCustomAttribute(typeof(MessagePackObjectAttribute)) != null
+                ? nameof(Unpack)
+                : nameof(UnpackContractless);
+
+            var method = typeof(SessionValueDeserializer)
+                .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static);
+            var genericMethod = method.MakeGenericMethod(type);
+            return (Func<byte[], object>)genericMethod.CreateDelegate(typeof(Func<byte[], object>));
         }
     }
 }

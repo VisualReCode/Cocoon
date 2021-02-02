@@ -1,73 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 
 namespace ReCode.Cocoon.Proxy.Session
 {
-    public class CocoonSession
+    public class CocoonSession : IAsyncDisposable
     {
         private readonly CocoonSessionClient _client;
-        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly HttpContext _context;
         private readonly object _mutex = new();
+        private Dictionary<string, byte[]> _original;
         private Dictionary<string, object> _cache;
 
         public CocoonSession(CocoonSessionClient client, IHttpContextAccessor contextAccessor)
         {
             _client = client;
-            _contextAccessor = contextAccessor;
+            _context = contextAccessor.HttpContext;
         }
 
         public ValueTask<T> GetAsync<T>(string key)
         {
+            EnsureCache();
             lock (_mutex)
             {
-                if (_cache is null)
+                if (_cache.TryGetValue(key, out var value))
                 {
-                    _cache = new Dictionary<string, object>();
-                }
-                else
-                {
-                    if (_cache.TryGetValue(key, out var value))
-                    {
-                        return new ValueTask<T>((T) value);
-                    }
+                    return new ValueTask<T>((T) value);
                 }
             }
             
             return new ValueTask<T>(Get<T>(key));
         }
 
-        public async Task SetAsync<T>(string key, T value)
+        public void Set<T>(string key, T value)
         {
-            lock (_mutex)
-            {
-                if (_cache is null)
-                {
-                    _cache = new Dictionary<string, object>();
-                }
-            }
-
-            object obj = value;
-            
-            CacheValue(key, obj);
-
-            var context = _contextAccessor.HttpContext;
-            if (context is null) throw new InvalidOperationException("No context");
-            await _client.SetAsync(key, obj, typeof(T), context.Request);
+            EnsureCache();
+            CacheValue(key, value);
         }
 
         private async Task<T> Get<T>(string key)
         {
-            var context = _contextAccessor.HttpContext;
-            if (context is null) throw new InvalidOperationException("No context");
-            var value = await _client.GetAsync<T>(key, context.Request);
+            var bytes = await _client.GetAsync(key, _context.Request);
+            var value = SessionValueDeserializer.Deserialize<T>(bytes);
             
-            CacheValue(key, value);
+            CacheValue(key, bytes, value);
 
             return (T)value;
+        }
+
+        private void CacheValue(string key, byte[] bytes, object value)
+        {
+            lock (_mutex)
+            {
+                _original[key] = bytes;
+                _cache[key] = value;
+            }
         }
 
         private void CacheValue(string key, object value)
@@ -76,6 +64,48 @@ namespace ReCode.Cocoon.Proxy.Session
             {
                 _cache[key] = value;
             }
+        }
+
+        private void EnsureCache()
+        {
+            lock (_mutex)
+            {
+                _cache ??= new ();
+                _original ??= new ();
+            }
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            List<Task> tasks = null;
+            
+            foreach (var (key, value) in _cache)
+            {
+                var bytes = ValueSerializer.Serialize(value);
+                
+                if (_original.TryGetValue(key, out var original))
+                {
+                    if (!bytes.AsSpan().SequenceEqual(original))
+                    {
+                        SendValue(key, bytes, value.GetType(), ref tasks);
+                    }
+                }
+                else
+                {
+                    SendValue(key, bytes, value.GetType(), ref tasks);
+                }
+            }
+
+            return tasks is null
+                ? new ValueTask()
+                : new ValueTask(Task.WhenAll(tasks));
+        }
+
+        private void SendValue(string key, byte[] bytes, Type type, ref List<Task> tasks)
+        {
+            var task = _client.SetAsync(key, bytes, type, _context.Request);
+            tasks ??= new();
+            tasks.Add(task);
         }
     }
 }

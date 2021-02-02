@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using MessagePack;
 using MessagePack.Resolvers;
@@ -14,6 +15,11 @@ namespace ReCode.Cocoon.Proxy.Session
             if (Deserializers.TryGetValue(typeof(T), out var deserializer))
             {
                 return deserializer(bytes);
+            }
+
+            if (typeof(T).GetCustomAttribute(typeof(MessagePackObjectAttribute)) is not null)
+            {
+                return MessagePackSerializer.Deserialize<T>(bytes);
             }
 
             return MessagePackSerializer.Deserialize<T>(bytes, TypelessContractlessStandardResolver.Options);
