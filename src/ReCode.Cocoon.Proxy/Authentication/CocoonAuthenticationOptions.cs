@@ -6,5 +6,9 @@ namespace ReCode.Cocoon.Proxy.Authentication
     {
         public string BackendApiUrl { get; set; }
         public string LoginUrl { get; set; }
+        
+        public string[] Headers { get; set; }
+        
+        public string[] Cookies { get; set; }
     }
 }

@@ -46,7 +46,17 @@ namespace ReCode.Cocoon.Legacy.Session
 
             if (type is null)
             {
-                return;
+                int comma = typeName.IndexOf(',');
+                if (comma > 0)
+                {
+                    typeName = typeName.Substring(0, comma);
+                    type = Type.GetType(typeName);
+                }
+
+                if (type is null)
+                {
+                    return;
+                }
             }
 
             var stream = context.Request.GetBufferlessInputStream();

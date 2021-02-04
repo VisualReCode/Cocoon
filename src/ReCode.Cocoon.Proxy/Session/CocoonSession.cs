@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -12,6 +13,7 @@ namespace ReCode.Cocoon.Proxy.Session
         private readonly object _mutex = new();
         private Dictionary<string, byte[]> _original;
         private Dictionary<string, object> _cache;
+        private int _disposed;
 
         public CocoonSession(CocoonSessionClient client, IHttpContextAccessor contextAccessor)
         {
@@ -77,6 +79,8 @@ namespace ReCode.Cocoon.Proxy.Session
 
         public ValueTask DisposeAsync()
         {
+            if (Interlocked.Increment(ref _disposed) > 1) return default;
+            
             List<Task> tasks = null;
             
             foreach (var (key, value) in _cache)

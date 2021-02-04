@@ -11,10 +11,12 @@ namespace ReCode.Cocoon.Proxy.Session
     public class CocoonSessionClient
     {
         private readonly HttpClient _client;
+        private readonly IOptionsMonitor<CocoonSessionOptions> _options;
 
         public CocoonSessionClient(HttpClient client, IOptionsMonitor<CocoonSessionOptions> options)
         {
             _client = client;
+            _options = options;
         }
 
         public async Task<byte[]> GetAsync(string key, HttpRequest request)
@@ -56,12 +58,16 @@ namespace ReCode.Cocoon.Proxy.Session
             await _client.SendAsync(message);
         }
 
-        private static HttpRequestMessage CreateMessage(string key, HttpRequest request, HttpMethod httpMethod, string? requestUri)
+        private HttpRequestMessage CreateMessage(string key, HttpRequest request, HttpMethod httpMethod, string? requestUri)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri);
-            if (request.Cookies.TryGetValue("ASP.NET_SessionId", out var sessionId))
+
+            foreach (var cookieName in _options.CurrentValue.Cookies.AsSpan())
             {
-                message.Headers.Add("Cookie", $"ASP.NET_SessionId={sessionId}");
+                if (request.Cookies.TryGetValue(cookieName, out var sessionId))
+                {
+                    message.Headers.Add("Cookie", $"{cookieName}={sessionId}");
+                }
             }
 
             return message;
