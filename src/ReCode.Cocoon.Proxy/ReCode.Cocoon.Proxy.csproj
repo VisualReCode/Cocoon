@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="Microsoft.ReverseProxy" Version="1.0.0-preview.8.21065.1" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.1" />
   </ItemGroup>
 
 </Project>

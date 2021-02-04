@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,7 @@ namespace ReCode.Cocoon.Proxy.Session
 {
     public class CocoonSession : IAsyncDisposable
     {
+        private static readonly ActivitySource Source = new("ReCode.Cocoon.Proxy");
         private readonly CocoonSessionClient _client;
         private readonly HttpContext _context;
         private readonly object _mutex = new();
@@ -43,6 +45,9 @@ namespace ReCode.Cocoon.Proxy.Session
 
         private async Task<T> Get<T>(string key)
         {
+            using var activity = Source.StartActivity("GetSession");
+            activity?.AddTag("key", key);
+            
             var bytes = await _client.GetAsync(key, _context.Request);
             var value = SessionValueDeserializer.Deserialize<T>(bytes);
             
@@ -81,6 +86,8 @@ namespace ReCode.Cocoon.Proxy.Session
         {
             if (Interlocked.Increment(ref _disposed) > 1) return default;
             
+            using var activity = Source.StartActivity("SaveSession");
+
             List<Task> tasks = null;
             
             foreach (var (key, value) in _cache)
@@ -100,9 +107,13 @@ namespace ReCode.Cocoon.Proxy.Session
                 }
             }
 
-            return tasks is null
-                ? new ValueTask()
-                : new ValueTask(Task.WhenAll(tasks));
+            if (tasks is null)
+                return new ValueTask();
+            else
+            {
+                activity?.AddTag("count", tasks.Count);
+                return new ValueTask(Task.WhenAll(tasks));
+            }
         }
 
         private void SendValue(string key, byte[] bytes, Type type, ref List<Task> tasks)

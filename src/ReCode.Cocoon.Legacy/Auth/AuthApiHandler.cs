@@ -13,6 +13,7 @@ namespace ReCode.Cocoon.Legacy.Auth
             {
                 if (principal.Identity?.IsAuthenticated == false)
                 {
+                    context.Response.Write("Not Authenticated");
                     context.Response.StatusCode = 401;
                     context.Response.Flush();
                     context.Response.End();

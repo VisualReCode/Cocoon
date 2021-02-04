@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -30,21 +29,6 @@ namespace ReCode.Cocoon.Proxy.Session
             }
 
             return await response.Content.ReadAsByteArrayAsync();
-        }
-
-        public async Task SetAsync(string key, object value, Type type, HttpRequest request)
-        {
-            var uri = $"?key={key}&type={type.FullName}";
-            
-            var message = CreateMessage(key, request, HttpMethod.Put, uri);
-
-            var bytes = ValueSerializer.Serialize(value);
-
-            MemoryPool<byte>.Shared.Rent(100);
-
-            message.Content = new ByteArrayContent(bytes);
-
-            await _client.SendAsync(message);
         }
 
         public async Task SetAsync(string key, byte[] bytes, Type type, HttpRequest request)

@@ -10,11 +10,6 @@ namespace ReCode.Cocoon.Legacy.Cookies
     {
         public void ProcessRequest(HttpContext context)
         {
-            if (!string.Equals(context.Request.Path, "/facadecookies"))
-            {
-                return;
-            }
-
             var key = context.Request.QueryString["key"];
 
             if (string.IsNullOrEmpty(key))

@@ -9,11 +9,6 @@ namespace ReCode.Cocoon.Legacy.Session
     {
         public void ProcessRequest(HttpContext context)
         {
-            if (!string.Equals(context.Request.Path, "/facadesession"))
-            {
-                return;
-            }
-
             var key = context.Request.QueryString["key"];
 
             if (string.IsNullOrEmpty(key))
