@@ -2,6 +2,6 @@
 {
     public class CocoonCookieOptions
     {
-        public string BackendApiUrl { get; set; }
+        public string? BackendApiUrl { get; set; }
     }
 }

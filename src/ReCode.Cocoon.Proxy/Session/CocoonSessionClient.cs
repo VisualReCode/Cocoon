@@ -18,7 +18,7 @@ namespace ReCode.Cocoon.Proxy.Session
             _options = options;
         }
 
-        public async Task<byte[]> GetAsync(string key, HttpRequest request)
+        public async Task<byte[]?> GetAsync(string key, HttpRequest request)
         {
             var message = CreateMessage(key, request, HttpMethod.Get, $"?key={key}");
 
@@ -46,7 +46,7 @@ namespace ReCode.Cocoon.Proxy.Session
         {
             var message = new HttpRequestMessage(httpMethod, requestUri);
 
-            foreach (var cookieName in _options.CurrentValue.Cookies.AsSpan())
+            foreach (var cookieName in _options.CurrentValue.Cookies)
             {
                 if (request.Cookies.TryGetValue(cookieName, out var sessionId))
                 {

@@ -25,27 +25,29 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
         protected override Task HandleChallengeAsync(AuthenticationProperties properties)
         {
-            if (string.IsNullOrEmpty(Options.LoginUrl))
+            var loginUrl = OptionsMonitor.CurrentValue.LoginUrl;
+            
+            if (string.IsNullOrEmpty(loginUrl))
             {
                 return base.HandleChallengeAsync(properties);
             }
-            if (Options.LoginUrl.Contains("{{ReturnUrl}}", StringComparison.OrdinalIgnoreCase))
+            if (loginUrl.Contains("{{ReturnUrl}}", StringComparison.OrdinalIgnoreCase))
             {
-                Response.Headers["Location"] = CreateLoginReturnUrl();
+                Response.Headers["Location"] = CreateLoginReturnUrl(loginUrl);
             }
             else
             {
-                Response.Headers["Location"] = Options.LoginUrl;
+                Response.Headers["Location"] = loginUrl;
             }
             Response.StatusCode = 302;
             return Task.CompletedTask;
         }
 
-        private string CreateLoginReturnUrl()
+        private string CreateLoginReturnUrl(string template)
         {
             var relativeUri = Request.GetEncodedPathAndQuery();
             var escaped = Uri.EscapeDataString(relativeUri);
-            return Options.LoginUrl.Replace("{{ReturnUrl}}", escaped, StringComparison.OrdinalIgnoreCase);
+            return template.Replace("{{ReturnUrl}}", escaped, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

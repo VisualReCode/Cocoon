@@ -13,8 +13,8 @@ namespace ReCode.Cocoon.Proxy.Session
         private readonly CocoonSessionClient _client;
         private readonly HttpContext _context;
         private readonly object _mutex = new();
-        private Dictionary<string, byte[]> _original;
-        private Dictionary<string, object> _cache;
+        private Dictionary<string, byte[]>? _original;
+        private Dictionary<string, object>? _cache;
         private int _disposed;
 
         public CocoonSession(CocoonSessionClient client, IHttpContextAccessor contextAccessor)
@@ -60,8 +60,8 @@ namespace ReCode.Cocoon.Proxy.Session
         {
             lock (_mutex)
             {
-                _original[key] = bytes;
-                _cache[key] = value;
+                _original![key] = bytes;
+                _cache![key] = value;
             }
         }
 
@@ -69,7 +69,7 @@ namespace ReCode.Cocoon.Proxy.Session
         {
             lock (_mutex)
             {
-                _cache[key] = value;
+                _cache![key] = value;
             }
         }
 
@@ -84,17 +84,19 @@ namespace ReCode.Cocoon.Proxy.Session
 
         public ValueTask DisposeAsync()
         {
+            if (_cache is null) return default;
+            
             if (Interlocked.Increment(ref _disposed) > 1) return default;
             
             using var activity = Source.StartActivity("SaveSession");
 
-            List<Task> tasks = null;
+            List<Task>? tasks = null;
             
             foreach (var (key, value) in _cache)
             {
                 var bytes = ValueSerializer.Serialize(value);
                 
-                if (_original.TryGetValue(key, out var original))
+                if (_original!.TryGetValue(key, out var original))
                 {
                     if (!bytes.AsSpan().SequenceEqual(original))
                     {
@@ -108,19 +110,26 @@ namespace ReCode.Cocoon.Proxy.Session
             }
 
             if (tasks is null)
-                return new ValueTask();
-            else
             {
-                activity?.AddTag("count", tasks.Count);
-                return new ValueTask(Task.WhenAll(tasks));
+                activity?.AddTag("count", Numbers[0]);
+                return new ValueTask();
             }
+
+            object count = tasks.Count < 10
+                ? Numbers[tasks.Count]
+                : tasks.Count;
+
+            activity?.AddTag("count", count);
+            return new ValueTask(Task.WhenAll(tasks));
         }
 
-        private void SendValue(string key, byte[] bytes, Type type, ref List<Task> tasks)
+        private void SendValue(string key, byte[] bytes, Type type, ref List<Task>? tasks)
         {
             var task = _client.SetAsync(key, bytes, type, _context.Request);
             tasks ??= new();
             tasks.Add(task);
         }
+
+        private static readonly object[] Numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     }
 }

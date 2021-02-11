@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -10,7 +11,10 @@ namespace ReCode.Cocoon.Proxy.Authentication
         public static AuthenticationBuilder AddCocoon(this AuthenticationBuilder builder)
         {
             builder.Services.AddOptions<CocoonAuthenticationOptions>()
-                .BindConfiguration("Cocoon:Authentication")
+                .Configure<IConfiguration>((options, configuration) =>
+                {
+                    configuration.GetSection("Cocoon.Authentication").Bind(options);
+                })
                 .Validate(o => Uri.TryCreate(o.BackendApiUrl, UriKind.Absolute, out _),
                     "Invalid BackendApiUrl");
             

@@ -13,17 +13,6 @@ namespace ReCode.Cocoon.Legacy.Session
         private static readonly ConcurrentDictionary<Type, Func<byte[], object>> Unpackers =
             new ConcurrentDictionary<Type, Func<byte[], object>>();
 
-        public static object Deserialize(Type type, byte[] bytes)
-        {
-            if (Deserializers.TryGetValue(type, out var deserializer))
-            {
-                return deserializer(bytes);
-            }
-
-            var func = Unpackers.GetOrAdd(type, CreateUnpackMethod);
-            return func(bytes);
-        }
-
         private static readonly Dictionary<Type, Func<byte[], object>> Deserializers = new Dictionary<Type, Func<byte[], object>>
         {
             [typeof(string)] = bytes => Encoding.UTF8.GetString(bytes),
@@ -44,6 +33,17 @@ namespace ReCode.Cocoon.Legacy.Session
             [typeof(DateTime)] = bytes => GetDateTime(bytes),
             [typeof(TimeSpan)] = bytes => GetTimeSpan(bytes),
         };
+
+        public static object Deserialize(Type type, byte[] bytes)
+        {
+            if (Deserializers.TryGetValue(type, out var deserializer))
+            {
+                return deserializer(bytes);
+            }
+
+            var func = Unpackers.GetOrAdd(type, CreateUnpackMethod);
+            return func(bytes);
+        }
 
         private static sbyte ToSByte(byte b)
         {
@@ -97,6 +97,28 @@ namespace ReCode.Cocoon.Legacy.Session
                 .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static);
             var genericMethod = method.MakeGenericMethod(type);
             return (Func<byte[], object>)genericMethod.CreateDelegate(typeof(Func<byte[], object>));
+        }
+        
+        public static bool GetTypeFromName(string typeName, out Type type)
+        {
+            type = Type.GetType(typeName);
+
+            if (type is null)
+            {
+                int comma = typeName.IndexOf(',');
+                if (comma > 0)
+                {
+                    typeName = typeName.Substring(0, comma);
+                    type = Type.GetType(typeName);
+                }
+
+                if (!(type is null))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ReCode.Cocoon.Proxy.Cookies
             _client = client;
         }
 
-        public async Task<string> GetAsync(string key, HttpRequest request)
+        public async Task<string?> GetAsync(string key, HttpRequest request)
         {
             var message = CreateMessage(request, HttpMethod.Get, $"?key={key}");
 

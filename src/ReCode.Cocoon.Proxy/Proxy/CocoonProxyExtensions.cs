@@ -23,6 +23,7 @@ namespace ReCode.Cocoon.Proxy.Proxy
         {
             var configuration = endpoints.ServiceProvider
                 .GetRequiredService<IConfiguration>();
+            
             var destinationPrefix = configuration
                 .GetValue<string>("Cocoon:Proxy:DestinationPrefix");
             
@@ -79,7 +80,7 @@ namespace ReCode.Cocoon.Proxy.Proxy
         {
             var backendUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             
-            foreach (var url in urls.AsSpan())
+            foreach (var url in urls)
             {
                 if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
                 {

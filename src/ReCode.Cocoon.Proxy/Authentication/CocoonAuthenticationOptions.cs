@@ -4,11 +4,12 @@ namespace ReCode.Cocoon.Proxy.Authentication
 {
     public class CocoonAuthenticationOptions : AuthenticationSchemeOptions
     {
-        public string BackendApiUrl { get; set; }
-        public string LoginUrl { get; set; }
+        public string BackendApiUrl { get; set; } = null!;
         
-        public string[] Headers { get; set; }
+        public string? LoginUrl { get; set; }
         
-        public string[] Cookies { get; set; }
+        public string[]? Headers { get; set; }
+        
+        public string[]? Cookies { get; set; }
     }
 }

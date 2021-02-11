@@ -37,27 +37,16 @@ namespace ReCode.Cocoon.Legacy.Session
 
         private static void SetValue(HttpContext context, string key, string typeName)
         {
-            var type = Type.GetType(typeName);
-
-            if (type is null)
-            {
-                int comma = typeName.IndexOf(',');
-                if (comma > 0)
-                {
-                    typeName = typeName.Substring(0, comma);
-                    type = Type.GetType(typeName);
-                }
-
-                if (type is null)
-                {
-                    return;
-                }
-            }
+            if (SessionValueDeserializer.GetTypeFromName(typeName, out var type)) return;
 
             var stream = context.Request.GetBufferlessInputStream();
-            var bytes = new byte[128];
-            var read = stream.Read(bytes, 0, 128);
-            Array.Resize(ref bytes, read);
+
+            var length = context.Request.ContentLength;
+            byte[] bytes;
+            using (var reader = new BinaryReader(stream))
+            {
+                bytes = reader.ReadBytes(length);
+            }
 
             var value = SessionValueDeserializer.Deserialize(type, bytes);
             context.Session[key] = value;
