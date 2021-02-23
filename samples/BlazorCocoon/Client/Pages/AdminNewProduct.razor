@@ -1,0 +1,67 @@
+﻿@page "/Admin/NewProduct"
+@using BlazorCocoon.Shared
+@inject HttpClient Http
+@inject NavigationManager Nav;
+
+@if (_categories is null)
+{
+  <p>Loading...</p>
+}
+else
+{
+  <div class="row">
+    <div class="col-12">
+      <h1>Add a New Product</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <EditForm Model="@_product" OnValidSubmit="OnSubmit">
+        <div class="form-group">
+          <label asp-for="Name">Name</label>
+          <InputText id="Name" @bind-Value="_product.ProductName" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label asp-for="Description">Description</label>
+          <InputText id="Description" @bind-Value="_product.Description" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label asp-for="Price">Price</label>
+          <InputNumber id="Price" @bind-Value="_product.UnitPrice" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label asp-for="Price">Category</label>
+          <InputSelect id="CategoryId" @bind-Value="_product.CategoryID">
+            @foreach (var category in _categories)
+            {
+              <option value="@category.CategoryID">@category.CategoryName</option>
+            }
+          </InputSelect>
+        </div>
+        <button type="submit">Submit</button>
+      </EditForm>
+    </div>
+  </div>
+}
+
+@code {
+  private Category[] _categories;
+  private Product _product = new();
+  
+  protected override async Task OnInitializedAsync()
+  {
+    _categories = await Http.GetFromJsonAsync<Category[]>("/api/admin/categories");
+    _product = new Product
+    {
+      CategoryID = _categories[0].CategoryID
+    };
+  }
+
+  private async void OnSubmit()
+  {
+    await Http.PostAsJsonAsync("/api/admin/products", _product);
+    Nav.NavigateTo("/Admin/AdminPage");
+  }
+
+}

@@ -10,6 +10,11 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                <AuthorizeView>
+                    <Authorized>
+                        <li><a href="/Admin/AdminPage">Admin</a></li>
+                    </Authorized>
+                </AuthorizeView>
                 <li><a href="/">Home</a></li>
                 <li><a href="/About">About</a></li>
                 <li><a href="/Contact">Contact</a></li>

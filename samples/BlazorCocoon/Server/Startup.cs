@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using BlazorCocoon.Server.Data;
+using Microsoft.EntityFrameworkCore;
 using ReCode.Cocoon.Proxy.Authentication;
 using ReCode.Cocoon.Proxy.Proxy;
 
@@ -27,6 +29,13 @@ namespace BlazorCocoon.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddCocoonProxy(Configuration);
+            
+            var connectionString = Configuration.GetConnectionString("WingtipToys");
+            services.AddDbContextPool<WingtipToysContext>(builder =>
+            {
+                builder.UseSqlServer(connectionString);
+            });
+
             
             services.AddAuthentication(CocoonAuthenticationDefaults.Scheme)
                 .AddCocoon();
@@ -60,7 +69,12 @@ namespace BlazorCocoon.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapCocoonProxyWithBlazor(new[]{"/"});
+                endpoints.MapCocoonProxyWithBlazor(new[]
+                {
+                    "/",
+                    "/Admin/AdminPage",
+                    "/Admin/NewProduct",
+                });
             });
         }
     }
