@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj" />
+    <ProjectReference Include="..\Client\BlazorCocoon.Client.csproj" />
+    <ProjectReference Include="..\Shared\BlazorCocoon.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- extends watching group to include *.razor files -->
+    <Watch Include="..\BlazorCocoon.Client\**\*.razor" />
+  </ItemGroup>
+
+</Project>

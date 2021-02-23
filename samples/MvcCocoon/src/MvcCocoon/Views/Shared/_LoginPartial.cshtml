@@ -1,0 +1,20 @@
+﻿<ul class="nav navbar-nav navbar-right">
+@if (User.Identity.IsAuthenticated)
+{
+  <li>
+    <a href="/Account/Manage" title="Manage your account">Hello, @User.Identity.Name !</a>
+  </li>
+  <li>
+    <a href="/Account/Logout">Log out</a>
+  </li>
+}
+else
+{
+  <li>
+    <a href="/Account/Register">Register</a>
+  </li>
+  <li>
+    <a href="/Account/Login">Log in</a>
+  </li>
+}
+</ul>
