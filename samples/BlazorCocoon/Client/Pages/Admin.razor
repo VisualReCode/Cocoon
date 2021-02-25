@@ -26,6 +26,7 @@ else
   <th>Name</th>
   <th>Description</th>
   <th>Price</th>
+  <th></th>
   </thead>
   <tbody>
   @foreach (var product in _products)
@@ -35,6 +36,7 @@ else
       <td>@product.ProductName</td>
       <td>@product.Description</td>
       <td>@product.UnitPrice.GetValueOrDefault().ToString("C")</td>
+      <td><a href="/Admin/EditProduct/@product.ProductID">Edit</a></td>
     </tr>
   }
   </tbody>

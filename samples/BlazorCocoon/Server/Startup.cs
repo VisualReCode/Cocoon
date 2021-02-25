@@ -35,7 +35,6 @@ namespace BlazorCocoon.Server
             {
                 builder.UseSqlServer(connectionString);
             });
-
             
             services.AddAuthentication(CocoonAuthenticationDefaults.Scheme)
                 .AddCocoon();
@@ -69,12 +68,12 @@ namespace BlazorCocoon.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapCocoonProxyWithBlazor(new[]
-                {
-                    "/",
-                    "/Admin/AdminPage",
-                    "/Admin/NewProduct",
-                });
+                endpoints.MapCocoonProxyWithBlazor(typeof(Client.Program));
+                // {
+                //     "/",
+                //     "/Admin/AdminPage",
+                //     "/Admin/NewProduct",
+                // });
             });
         }
     }

@@ -37,6 +37,19 @@ namespace BlazorCocoon.Server.Controllers
             return products;
         }
 
+        [HttpGet("products/{productId}")]
+        public async Task<ActionResult<Product>> GetProduct(int productId)
+        {
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.ProductID == productId);
+
+            if (product is null) return NotFound();
+
+            return ToDto(product);
+        }
+
         [HttpPost("products")]
         public async Task<ActionResult<Product>> PostProduct([FromBody] Product product)
         {
@@ -75,6 +88,7 @@ namespace BlazorCocoon.Server.Controllers
                 Description = source.Description,
                 ImagePath = source.ImagePath,
                 UnitPrice = source.UnitPrice,
+                CategoryID = source.CategoryID,
                 Category = new Category
                 {
                     CategoryID = source.Category.CategoryID,
