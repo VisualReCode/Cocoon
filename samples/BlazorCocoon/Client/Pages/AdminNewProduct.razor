@@ -58,7 +58,7 @@ else
     };
   }
 
-  private async void OnSubmit()
+  private async Task OnSubmit()
   {
     await Http.PostAsJsonAsync("/api/admin/products", _product);
     Nav.NavigateTo("/Admin/AdminPage");
