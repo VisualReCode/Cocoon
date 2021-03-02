@@ -10,8 +10,10 @@ namespace ReCode.Cocoon.Proxy.Session
 {
     internal static class SessionValueDeserializer
     {
-        public static object Deserialize<T>(byte[] bytes)
+        public static object? Deserialize<T>(byte[]? bytes)
         {
+            if (bytes is null) return default;
+            
             if (Deserializers.TryGetValue(typeof(T), out var deserializer))
             {
                 return deserializer(bytes);

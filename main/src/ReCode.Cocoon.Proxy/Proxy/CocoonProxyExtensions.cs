@@ -132,6 +132,70 @@ namespace ReCode.Cocoon.Proxy.Proxy
 
             return endpoints;
         }
+        
+        public static IEndpointRouteBuilder MapCocoonProxyWithBlazorServer(this IEndpointRouteBuilder endpoints, Type programType) =>
+            MapCocoonProxyWithBlazorServer(endpoints, BlazorRouteDiscovery.FindRoutes(programType));
+
+        public static IEndpointRouteBuilder MapCocoonProxyWithBlazorServer(this IEndpointRouteBuilder endpoints, IEnumerable<string> blazorPaths)
+        {
+            var blazorRoutes = new BlazorRoutes(blazorPaths);
+            
+            var configuration = endpoints.ServiceProvider
+                .GetRequiredService<IConfiguration>();
+
+            var destinationPrefix = configuration
+                .GetValue<string>("Cocoon:Proxy:DestinationPrefix");
+
+            if (!Uri.TryCreate(destinationPrefix, UriKind.Absolute, out var destinationPrefixUri))
+            {
+                throw new InvalidOperationException("Invalid DestinationPrefix");
+            }
+
+            var backendUrls = CreateExclusionSet(configuration);
+
+            var httpClient = new HttpMessageInvoker(new SocketsHttpHandler()
+            {
+                UseProxy = false,
+                AllowAutoRedirect = false,
+                AutomaticDecompression = DecompressionMethods.None,
+                UseCookies = false
+            });
+
+            var transformer = new RedirectTransformer(destinationPrefixUri);
+            var requestOptions = new RequestProxyOptions(TimeSpan.FromSeconds(100), null);
+            var httpProxy = endpoints.ServiceProvider.GetRequiredService<IHttpProxy>();
+
+            var app = endpoints.CreateApplicationBuilder();
+
+            app.Use(async (httpContext, next) =>
+            {
+                if (backendUrls.Contains(httpContext.Request.Path))
+                {
+                    httpContext.Response.StatusCode = 404;
+                    return;
+                }
+
+                if (blazorRoutes.Contains(httpContext.Request.Path))
+                {
+                    await next();
+                    return;
+                }
+
+                using var activity = Source.StartActivity("Proxy");
+                activity?.SetTag("path", httpContext.Request.Path.ToString());
+
+                await httpProxy.ProxyAsync(httpContext, destinationPrefix, httpClient, requestOptions, transformer);
+            });
+
+            app.UseStaticFiles();
+
+            var func = app.Build();
+
+            endpoints.Map("/{**catch-all}", func);
+
+            return endpoints;
+        }
+
 
         private static HashSet<string> CreateExclusionSet(IConfiguration configuration)
         {
