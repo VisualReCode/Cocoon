@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using BlazorCocoon.Server.Data;
+using BlazorCocoon.Server.Services;
 using Microsoft.EntityFrameworkCore;
 using ReCode.Cocoon.Proxy.Authentication;
 using ReCode.Cocoon.Proxy.Proxy;
@@ -26,6 +27,8 @@ namespace BlazorCocoon.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCocoonSession();
+            services.AddScoped<ShoppingCart>();
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddCocoonProxy(Configuration);

@@ -1,3 +1,5 @@
+@using BlazorCocoon.Shared
+
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -19,9 +21,14 @@
                 <li><a href="/About">About</a></li>
                 <li><a href="/Contact">Contact</a></li>
                 <li><a href="/ProductList">Products</a></li>
-                <li><a href="/ShoppingCart" ID="cartCount">&nbsp;</a></li>
+                <CartLink />
             </ul>
             <LoginPartial />
         </div>
     </div>
 </div>
+
+@code {
+
+
+}
