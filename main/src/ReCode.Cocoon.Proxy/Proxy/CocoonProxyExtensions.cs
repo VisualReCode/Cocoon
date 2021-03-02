@@ -65,9 +65,12 @@ namespace ReCode.Cocoon.Proxy.Proxy
             return endpoints;
         }
 
+        public static IEndpointRouteBuilder MapCocoonProxyWithBlazor(this IEndpointRouteBuilder endpoints, Type programType) =>
+            MapCocoonProxyWithBlazor(endpoints, BlazorRouteDiscovery.FindRoutes(programType));
+
         public static IEndpointRouteBuilder MapCocoonProxyWithBlazor(this IEndpointRouteBuilder endpoints, IEnumerable<string> blazorPaths)
         {
-            var blazorPathSet = new HashSet<string>(blazorPaths, StringComparer.OrdinalIgnoreCase);
+            var blazorRoutes = new BlazorRoutes(blazorPaths);
             
             var configuration = endpoints.ServiceProvider
                 .GetRequiredService<IConfiguration>();
@@ -104,7 +107,7 @@ namespace ReCode.Cocoon.Proxy.Proxy
                     return;
                 }
 
-                if (blazorPathSet.Contains(httpContext.Request.Path))
+                if (blazorRoutes.Contains(httpContext.Request.Path))
                 {
                     httpContext.Request.Path = "/index.html";
 

@@ -18,4 +18,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj" />
+  </ItemGroup>
+
 </Project>
