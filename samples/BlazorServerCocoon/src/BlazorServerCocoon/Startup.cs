@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -13,9 +10,7 @@ using Microsoft.Extensions.Hosting;
 using BlazorServerCocoon.Data;
 using BlazorServerCocoon.Services;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using ReCode.Cocoon.Proxy.Authentication;
 using ReCode.Cocoon.Proxy.Cookies;
 using ReCode.Cocoon.Proxy.Proxy;
@@ -51,10 +46,11 @@ namespace BlazorServerCocoon
             });
             
             services.AddCocoonProxy(Configuration);
-            
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<BlazorRouteTransformer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,31 +70,20 @@ namespace BlazorServerCocoon
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseExplicitBlazorRoutes(typeof(Program));
+
             app.UseRouting();
             
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapCocoonProxyWithBlazorServer(typeof(Program));
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
+                endpoints.MapCocoonProxyWithBlazorServer(typeof(Program));
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
-    }
-    
-    public class CustomAuthenticationStateProvider : RevalidatingServerAuthenticationStateProvider
-    {
-        public CustomAuthenticationStateProvider(ILoggerFactory loggerFactory) : base(loggerFactory)
-        {
-        }
-
-        protected override Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(true);
-        }
-
-        protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
     }
 }
