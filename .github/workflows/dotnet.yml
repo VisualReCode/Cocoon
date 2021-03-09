@@ -29,9 +29,12 @@ jobs:
       with:
         path: .\main
     - name: Build
-      run: > dotnet build -c Release
-             -p:AssemblyVersion=${{ steps.nbgv.outputs.AssemblyVersion }}
-             --no-restore
+      run: >
+        dotnet build -c Release
+        -p:AssemblyVersion=${{ steps.nbgv.outputs.AssemblyVersion }}
+        -p:AssemblyFileVersion=${{ steps.nbgv.outputs.AssemblyFileVersion }}
+        -p:AssemblyInformationalVersion=${{ steps.nbgv.outputs.AssemblyInformationalVersion }}
+        --no-restore
       working-directory: .\main
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal
