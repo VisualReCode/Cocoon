@@ -40,10 +40,10 @@ jobs:
       run: dotnet test -c Release --no-build --verbosity normal .\test\ReCode.Cocoon.Proxy.Tests
       working-directory: .\main
     - name: PackLegacy
-      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}{{ steps.nbgv.outputs.PrereleaseVersion }} --output . src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj
+      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }} --output . src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj
       working-directory: .\main
     - name: PackProxy
-      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}{{ steps.nbgv.outputs.PrereleaseVersion }} --output . src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj
+      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }} --output . src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj
       working-directory: .\main
     # - name: Push
     #   run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
