@@ -1,0 +1,13 @@
+<Project>
+  
+  <PropertyGroup>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/VisualReCode/Cocoon</PackageProjectUrl>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <Company>Visual ReCode</Company>
+    <Copyright>2001 Visual ReCode</Copyright>
+  </PropertyGroup>
+  
+</Project>

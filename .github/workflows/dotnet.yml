@@ -1,10 +1,8 @@
-name: .NET
+name: Release
 
 on:
   push:
     branches: [ main ]
-  # pull_request:
-  #   branches: [ main ]
 
 jobs:
   build:
@@ -22,16 +20,50 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: dotnet restore
+      working-directory: .\main
     - name: NerdBank.GitVersioning
-      id: nbgv
       uses: dotnet/nbgv@v0.3.1
+      id: nbgv
+      with:
+        path: .\main
     - name: Build
-      run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SimpleVersion}}-alpha --no-restore
+      run: >
+        dotnet build -c Release
+        -p:AssemblyVersion=${{ steps.nbgv.outputs.AssemblyVersion }}
+        -p:AssemblyFileVersion=${{ steps.nbgv.outputs.AssemblyFileVersion }}
+        -p:AssemblyInformationalVersion=${{ steps.nbgv.outputs.AssemblyInformationalVersion }}
+        --no-restore
+      working-directory: .\main
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test -c Release --no-build --verbosity normal .\test\ReCode.Cocoon.Proxy.Tests
+      working-directory: .\main
     - name: PackLegacy
-      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}-alpha --output . src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj
+      run: >
+        dotnet pack --configuration Release --no-build
+        -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
+        --output . src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj
+      working-directory: .\main
     - name: PackProxy
-      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}-alpha --output . src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj
+      run: >
+        dotnet pack --configuration Release --no-build
+        -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
+        --output . src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj
+    - name: PackProxyBlazorServer
+      run: >
+        dotnet pack --configuration Release --no-build
+        -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
+        --output . src\ReCode.Cocoon.Proxy.BlazorServer\ReCode.Cocoon.Proxy.BlazorServer.csproj
+    - name: PackProxyBlazorWasm
+      run: >
+        dotnet pack --configuration Release --no-build
+        -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
+        --output . src\ReCode.Cocoon.Proxy.BlazorWasm\ReCode.Cocoon.Proxy.BlazorWasm.csproj
+    - name: PackProxyBlazorWasmAuth
+      run: >
+        dotnet pack --configuration Release --no-build
+        -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
+        --output . src\ReCode.Cocoon.Proxy.BlazorWasmAuth\ReCode.Cocoon.Proxy.BlazorWasmAuth.csproj
+      working-directory: .\main
     - name: Push
       run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+      working-directory: .\main
