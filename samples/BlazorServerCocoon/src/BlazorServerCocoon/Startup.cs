@@ -1,15 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorServerCocoon.Data;
 using BlazorServerCocoon.Services;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using ReCode.Cocoon.Proxy.Authentication;
 using ReCode.Cocoon.Proxy.Cookies;
@@ -49,8 +46,6 @@ namespace BlazorServerCocoon
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<BlazorRouteTransformer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +65,7 @@ namespace BlazorServerCocoon
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            // This has to go before app.UseRouting();
             app.UseExplicitBlazorRoutes(typeof(Program));
 
             app.UseRouting();
@@ -81,7 +77,7 @@ namespace BlazorServerCocoon
             {
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
-                endpoints.MapCocoonProxyWithBlazorServer(typeof(Program));
+                endpoints.MapCocoonProxy();
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

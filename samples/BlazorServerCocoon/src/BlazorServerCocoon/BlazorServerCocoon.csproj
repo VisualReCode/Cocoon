@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\main\src\ReCode.Cocoon.Proxy.BlazorServer\ReCode.Cocoon.Proxy.BlazorServer.csproj" />
     <ProjectReference Include="..\..\..\..\main\src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj" />
   </ItemGroup>
 

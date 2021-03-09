@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy.BlazorWasm\ReCode.Cocoon.Proxy.BlazorWasm.csproj" />
     <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj" />
     <ProjectReference Include="..\Client\BlazorCocoon.Client.csproj" />
     <ProjectReference Include="..\Shared\BlazorCocoon.Shared.csproj" />

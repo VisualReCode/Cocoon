@@ -6,12 +6,10 @@
 
   <PropertyGroup>
     <PackageId>ReCode.Cocoon.Legacy</PackageId>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="1.9.11" />
-<!--    <PackageReference Include="System.Memory" Version="4.5.4" />-->
   </ItemGroup>
 
   <ItemGroup>

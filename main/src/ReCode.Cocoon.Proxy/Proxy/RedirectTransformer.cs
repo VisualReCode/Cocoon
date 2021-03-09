@@ -6,7 +6,7 @@ using Microsoft.ReverseProxy.Service.Proxy;
 
 namespace ReCode.Cocoon.Proxy.Proxy
 {
-    internal class RedirectTransformer : HttpTransformer
+    public class RedirectTransformer : HttpTransformer
     {
         private readonly Uri _destinationPrefix;
 

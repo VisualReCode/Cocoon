@@ -20,53 +20,12 @@ namespace BlazorCocoon.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-            
-            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-            builder.Services.AddAuthorizationCore();
+
+            builder.Services.AddCocoonAuthentication();
             
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
         }
-    }
-    
-    public class CustomAuthStateProvider : AuthenticationStateProvider
-    {
-        private readonly HttpClient _http;
-
-        public CustomAuthStateProvider(HttpClient http)
-        {
-            _http = http;
-        }
-
-        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-        {
-            var cocoonPrincipal =
-                await _http.GetFromJsonAsync<CocoonPrincipal>("/_cocoon/auth");
-
-            if (cocoonPrincipal.IsAuthenticated)
-            {
-                var identity = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, cocoonPrincipal.Name),
-                }, "Fake authentication type");
-
-                var user = new ClaimsPrincipal(identity);
-
-                return new AuthenticationState(user);
-            }
-            else
-            {
-                var user = new ClaimsPrincipal();
-                return new AuthenticationState(user);
-            }
-            
-        }
-    }
-    
-    public class CocoonPrincipal
-    {
-        public string Name { get; set; }
-        public bool IsAuthenticated { get; set; }
     }
 }
