@@ -37,7 +37,7 @@ jobs:
         --no-restore
       working-directory: .\main
     - name: Test
-      run: dotnet test -c Release --no-build --verbosity normal
+      run: dotnet test -c Release --no-build --verbosity normal .\test\ReCode.Cocoon.Proxy.Tests
       working-directory: .\main
     - name: PackLegacy
       run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}{{ steps.nbgv.outputs.PrereleaseVersion }} --output . src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj
