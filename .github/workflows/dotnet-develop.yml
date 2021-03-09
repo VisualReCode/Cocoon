@@ -1,4 +1,4 @@
-name: .NET
+name: Develop CI
 
 on:
   push:
@@ -9,17 +9,33 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
-
+    runs-on: windows-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: dotnet restore
+      working-directory: .\main
+    - name: NerdBank.GitVersioning
+      uses: dotnet/nbgv@v0.3.1
+      id: nbgv
+      with:
+        path: .\main
     - name: Build
-      run: dotnet build --no-restore
+      run: >
+        dotnet build -c Release
+        -p:AssemblyVersion=${{ steps.nbgv.outputs.AssemblyVersion }}
+        -p:AssemblyFileVersion=${{ steps.nbgv.outputs.AssemblyFileVersion }}
+        -p:AssemblyInformationalVersion=${{ steps.nbgv.outputs.AssemblyInformationalVersion }}
+        --no-restore
+      working-directory: .\main
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test -c Release --no-build --verbosity normal .\test\ReCode.Cocoon.Proxy.Tests
+      working-directory: .\main
