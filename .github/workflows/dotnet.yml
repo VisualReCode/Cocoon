@@ -44,26 +44,29 @@ jobs:
         --output . src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj
       working-directory: .\main
     - name: PackProxy
+      working-directory: .\main
       run: >
         dotnet pack --configuration Release --no-build
         -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
         --output . src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj
     - name: PackProxyBlazorServer
+      working-directory: .\main
       run: >
         dotnet pack --configuration Release --no-build
         -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
         --output . src\ReCode.Cocoon.Proxy.BlazorServer\ReCode.Cocoon.Proxy.BlazorServer.csproj
     - name: PackProxyBlazorWasm
+      working-directory: .\main
       run: >
         dotnet pack --configuration Release --no-build
         -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
         --output . src\ReCode.Cocoon.Proxy.BlazorWasm\ReCode.Cocoon.Proxy.BlazorWasm.csproj
     - name: PackProxyBlazorWasmAuth
+      working-directory: .\main
       run: >
         dotnet pack --configuration Release --no-build
         -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}${{ steps.nbgv.outputs.PrereleaseVersion }}
         --output . src\ReCode.Cocoon.Proxy.BlazorWasmAuth\ReCode.Cocoon.Proxy.BlazorWasmAuth.csproj
-      working-directory: .\main
     - name: Push
       run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
       working-directory: .\main
