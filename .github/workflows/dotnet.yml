@@ -26,7 +26,7 @@ jobs:
     - name: NerdBank.GitVersioning
       id: nbgv
       uses: dotnet/nbgv@v0.3.1
-      working-directory: .\main
+      path: .\main
     - name: Build
       run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SimpleVersion}}-alpha --no-restore
       working-directory: .\main
