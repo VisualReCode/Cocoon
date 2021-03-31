@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using ReCode.Cocoon.Proxy.Proxy;
 
 // ReSharper disable once CheckNamespace
