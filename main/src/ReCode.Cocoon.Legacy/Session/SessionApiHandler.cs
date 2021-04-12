@@ -25,7 +25,7 @@ namespace ReCode.Cocoon.Legacy.Session
             else if ("PUT".Equals(context.Request.HttpMethod, StringComparison.OrdinalIgnoreCase))
             {
                 var typeName = context.Request.QueryString["type"];
-                if (string.IsNullOrEmpty(key))
+                if (string.IsNullOrEmpty(typeName))
                 {
                     // Bad request
                     context.Response.StatusCode = 400;

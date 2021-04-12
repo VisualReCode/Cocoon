@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ReCode.Cocoon.Proxy.BlazorCodeGen\ReCode.Cocoon.Proxy.BlazorCodeGen.csproj"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer"/>
     <ProjectReference Include="..\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj" />
   </ItemGroup>
   

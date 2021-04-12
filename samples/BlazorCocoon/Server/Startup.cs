@@ -8,6 +8,7 @@ using BlazorCocoon.Server.Services;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using ReCode.Cocoon.Proxy.Authentication;
+using ReCode.Cocoon.Proxy.Blazor;
 
 namespace BlazorCocoon.Server
 {
@@ -68,7 +69,7 @@ namespace BlazorCocoon.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapCocoonProxyWithBlazor(typeof(Client.Program));
+                endpoints.MapCocoonProxyWithBlazor(typeof(CocoonBlazorRouteTester));
             });
         }
     }

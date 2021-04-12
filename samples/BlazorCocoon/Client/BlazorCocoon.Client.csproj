@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy.BlazorCodeGen\ReCode.Cocoon.Proxy.BlazorCodeGen.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy.BlazorWasmAuth\ReCode.Cocoon.Proxy.BlazorWasmAuth.csproj" />
     <ProjectReference Include="..\Shared\BlazorCocoon.Shared.csproj" />
   </ItemGroup>

@@ -10,20 +10,35 @@ namespace Microsoft.AspNetCore.Routing
 {
     public static class CocoonProxyBlazorWasmRouting
     {
-        public static IEndpointRouteBuilder MapCocoonProxyWithBlazor(this IEndpointRouteBuilder endpoints, Type programType) =>
-            MapCocoonProxyWithBlazor(endpoints, BlazorRouteDiscovery.FindRoutes(programType));
+        public static IEndpointRouteBuilder MapCocoonProxyWithBlazor(this IEndpointRouteBuilder endpoints, Type type)
+        {
+            Func<string, bool> blazorTestFunc;
+            if (type.Name == "CocoonBlazorRouteTester")
+            {
+                var instance = Activator.CreateInstance(type);
+                var method = type.GetMethod("IsMatch");
+                blazorTestFunc = (Func<string, bool>) method!.CreateDelegate(typeof(Func<string, bool>), instance);
+            }
+            else
+            {
+                var blazorPaths = BlazorRouteDiscovery.FindRoutes(type);
+                var blazorRoutes = new BlazorRoutes(blazorPaths);
+                var method = typeof(BlazorRoutes).GetMethod("Contains");
+                blazorTestFunc = (Func<string, bool>) method!.CreateDelegate(typeof(Func<string, bool>), blazorRoutes);
+            }
 
-        public static IEndpointRouteBuilder MapCocoonProxyWithBlazor(this IEndpointRouteBuilder endpoints, IEnumerable<string> blazorPaths)
+            return MapCocoonProxyWithBlazor(endpoints, blazorTestFunc);
+        }
+
+        public static IEndpointRouteBuilder MapCocoonProxyWithBlazor(this IEndpointRouteBuilder endpoints, Func<string, bool> blazorRouteTest)
         {
             var cocoonProxy = endpoints.ServiceProvider.GetRequiredService<CocoonProxy>();
-            
-            var blazorRoutes = new BlazorRoutes(blazorPaths);
             
             var app = endpoints.CreateApplicationBuilder();
 
             app.Use(async (httpContext, next) =>
             {
-                if (blazorRoutes.Contains(httpContext.Request.Path))
+                if (blazorRouteTest(httpContext.Request.Path))
                 {
                     httpContext.Request.Path = "/index.html";
 

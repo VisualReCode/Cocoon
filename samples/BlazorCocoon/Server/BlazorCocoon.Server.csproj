@@ -5,20 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.3"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.3"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy.BlazorWasm\ReCode.Cocoon.Proxy.BlazorWasm.csproj" />
-    <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj" />
-    <ProjectReference Include="..\Client\BlazorCocoon.Client.csproj" />
-    <ProjectReference Include="..\Shared\BlazorCocoon.Shared.csproj" />
+    <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy.BlazorWasm\ReCode.Cocoon.Proxy.BlazorWasm.csproj"/>
+    <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Proxy\ReCode.Cocoon.Proxy.csproj"/>
+    <ProjectReference Include="..\Client\BlazorCocoon.Client.csproj"/>
+    <ProjectReference Include="..\Shared\BlazorCocoon.Shared.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
     <!-- extends watching group to include *.razor files -->
-    <Watch Include="..\BlazorCocoon.Client\**\*.razor" />
+    <Watch Include="..\BlazorCocoon.Client\**\*.razor"/>
   </ItemGroup>
 
 </Project>
