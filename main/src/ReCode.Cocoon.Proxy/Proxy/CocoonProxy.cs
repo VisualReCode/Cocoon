@@ -21,7 +21,7 @@ namespace ReCode.Cocoon.Proxy.Proxy
         private readonly RequestProxyOptions _requestOptions;
         private readonly string _destinationPrefix;
 
-        public CocoonProxy(IConfiguration configuration, ILogger<CocoonProxy> logger, IHttpProxy httpProxy)
+        public CocoonProxy(IConfiguration configuration, ILogger<CocoonProxy> logger, IHttpProxy httpProxy, CocoonProxyOptions? proxyOptions)
         {
             _httpProxy = httpProxy;
             _destinationPrefix = configuration
@@ -41,14 +41,21 @@ namespace ReCode.Cocoon.Proxy.Proxy
 
             _backendUrls = CocoonProxyExclusions.CreateExclusionSet(configuration);
 
-            _httpClient = new HttpMessageInvoker(new SocketsHttpHandler()
+            var socketsHttpHandler = new SocketsHttpHandler()
             {
                 UseProxy = false,
                 AllowAutoRedirect = false,
                 AutomaticDecompression = DecompressionMethods.None,
                 UseCookies = false
-            });
+            };
 
+            // Allow the client to validate the remote certificate, useful in development and self certificate scenarios
+            if (proxyOptions?.RemoteCertificateValidationCallback != null)
+            {
+                socketsHttpHandler.SslOptions.RemoteCertificateValidationCallback = proxyOptions.RemoteCertificateValidationCallback;
+            }
+
+            _httpClient = new HttpMessageInvoker(socketsHttpHandler);
             _transformer = new RedirectTransformer(destinationPrefixUri);
 
             if (!TimeSpan.TryParse(configuration.GetValue<string>("Cocoon:Proxy:Timeout"), out var timeout))
