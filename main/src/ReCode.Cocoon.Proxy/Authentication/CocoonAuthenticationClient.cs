@@ -94,7 +94,7 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
         private void CopyOptionsHeaders(HttpRequest request, HttpRequestMessage requestMessage)
         {
-            foreach (var headerName in _options.CurrentValue.Headers)
+            foreach (var headerName in _options.CurrentValue.Headers!)
             {
                 if (request.Headers.TryGetValue(headerName, out var values))
                 {
@@ -115,7 +115,7 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
         private void CopyOptionsCookies(HttpRequest request, HttpRequestMessage requestMessage)
         {
-            foreach (var cookieName in _options.CurrentValue.Cookies)
+            foreach (var cookieName in _options.CurrentValue.Cookies!)
             {
                 if (request.Cookies.TryGetValue(cookieName, out var value))
                 {

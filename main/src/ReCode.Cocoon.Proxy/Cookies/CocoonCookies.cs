@@ -16,11 +16,11 @@ namespace ReCode.Cocoon.Proxy.Cookies
             _contextAccessor = contextAccessor;
         }
 
-        public ValueTask<string> GetAsync(string key)
+        public ValueTask<string?> GetAsync(string key)
         {
             var context = _contextAccessor.HttpContext;
             if (context is null) throw new InvalidOperationException("No context");
-            return new ValueTask<string>(_client.GetAsync(key, context.Request));
+            return new ValueTask<string?>(_client.GetAsync(key, context.Request));
         }
 
         public async Task SetAsync(string key, string value)

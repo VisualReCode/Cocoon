@@ -28,7 +28,7 @@ namespace ReCode.Cocoon.Proxy.Session
             EnsureCache();
             lock (_mutex)
             {
-                if (_cache.TryGetValue(key, out var value))
+                if (_cache!.TryGetValue(key, out var value))
                 {
                     return new ValueTask<T>((T) value);
                 }
@@ -49,6 +49,8 @@ namespace ReCode.Cocoon.Proxy.Session
             activity?.AddTag("key", key);
             
             var bytes = await _client.GetAsync(key, _context.Request);
+            if (bytes is null) return default;
+            
             var value = SessionValueDeserializer.Deserialize<T>(bytes);
             
             CacheValue(key, bytes, value);
@@ -56,7 +58,7 @@ namespace ReCode.Cocoon.Proxy.Session
             return (T)value;
         }
 
-        private void CacheValue(string key, byte[] bytes, object value)
+        private void CacheValue(string key, byte[] bytes, object? value)
         {
             lock (_mutex)
             {
@@ -77,8 +79,8 @@ namespace ReCode.Cocoon.Proxy.Session
         {
             lock (_mutex)
             {
-                _cache ??= new ();
-                _original ??= new ();
+                _cache ??= new Dictionary<string, object>();
+                _original ??= new Dictionary<string, byte[]>();
             }
         }
 

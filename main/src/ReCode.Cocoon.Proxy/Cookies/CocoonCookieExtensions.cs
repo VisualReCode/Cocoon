@@ -21,7 +21,7 @@ namespace ReCode.Cocoon.Proxy.Cookies
             services.AddHttpClient<CocoonCookieClient>((provider, client) =>
             {
                 var options = provider.GetRequiredService<IOptionsMonitor<CocoonCookieOptions>>();
-                client.BaseAddress = new Uri(options.CurrentValue.BackendApiUrl);
+                client.BaseAddress = new Uri(options.CurrentValue.BackendApiUrl!);
             });
             services.AddScoped<ICocoonCookies, CocoonCookies>();
             return services;
