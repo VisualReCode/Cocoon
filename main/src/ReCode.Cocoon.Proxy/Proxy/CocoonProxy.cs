@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.ReverseProxy.Service.Proxy;
+using Yarp.ReverseProxy.Service.Proxy;
 
 namespace ReCode.Cocoon.Proxy.Proxy
 {
