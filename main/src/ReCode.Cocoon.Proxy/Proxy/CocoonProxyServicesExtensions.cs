@@ -1,8 +1,7 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.ReverseProxy.Service.Proxy;
 using ReCode.Cocoon.Proxy.Proxy;
+using Yarp.ReverseProxy.Service.Proxy;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
