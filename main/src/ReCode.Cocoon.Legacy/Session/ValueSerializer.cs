@@ -4,9 +4,6 @@ using System.Text;
 using MessagePack;
 using MessagePack.Resolvers;
 
-// using System.Buffers;
-// using System.Buffers.Text;
-
 namespace ReCode.Cocoon.Legacy.Session
 {
     public static class ValueSerializer
