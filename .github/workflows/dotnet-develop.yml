@@ -42,4 +42,7 @@ jobs:
     - name: BuildNet45
       run: |
         cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
-        .\MSBuild.exe $Env:GITHUB_WORKSPACE\main\Cocoon.sln
+        .\MSBuild.exe $Env:GITHUB_WORKSPACE\main\Cocoon.sln -m /p:Configuration=Release
+    - name: ConsoleRunXUnitLegacyTests
+      run: |
+        ~/.nuget/packages/xunit.runner.console/2.4.1/tools/net472/xunit.console.exe $Env:GITHUB_WORKSPACE\main\test\ReCode.Cocoon.Legacy.Tests\bin\Debug\net45\ReCode.Cocoon.Legacy.Tests.dll
