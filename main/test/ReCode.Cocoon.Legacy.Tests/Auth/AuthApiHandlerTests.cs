@@ -66,7 +66,7 @@ namespace ReCode.Cocoon.Legacy.Tests.Auth
         [Fact]
         public void HandlerIsReusable()
         {
-            Assert.False(_sut.IsReusable);
+            Assert.True(_sut.IsReusable);
         }
     }
 }
