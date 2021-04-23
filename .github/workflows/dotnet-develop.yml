@@ -39,3 +39,7 @@ jobs:
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal .\test\ReCode.Cocoon.Proxy.Tests
       working-directory: .\main
+    - name: BuildNet45
+      run: |
+        cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+        .\MSBuild.exe $Env:GITHUB_WORKSPACE\main\Cocoon.sln
