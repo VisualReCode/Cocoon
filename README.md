@@ -85,3 +85,13 @@ The cookie names need to match the names in the application that's being facaded
     <sessionState regenerateExpiredSessionId="false" cookieless="UseCookies" cookieName="COOKIENAME" />
 </system.web>
 ```
+
+# Wingtip-Toys - Windows docker container. 
+
+Runs a completely self container windows container of the legacy application including the database server
+
+```
+docker run -p 8080:80 -m 2gb -it win/app:latest
+```
+
+

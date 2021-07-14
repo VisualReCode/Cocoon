@@ -85,6 +85,10 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\main\src\ReCode.Cocoon.Legacy\ReCode.Cocoon.Legacy.csproj">
+      <Project>{a7165561-054f-4871-aa5d-3e6b9cce80f6}</Project>
+      <Name>ReCode.Cocoon.Legacy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WingtipToys\WingtipToys.csproj">
       <Project>{3eaf67cc-d5d2-4624-8347-2545c9ea4ae9}</Project>
       <Name>WingtipToys</Name>
