@@ -16,6 +16,9 @@ namespace ReCode.Cocoon.Legacy.Auth
         
         public void ProcessRequest(HttpContextBase context)
         {
+            context.Response.TrySkipIisCustomErrors = true;
+            context.Response.SuppressFormsAuthenticationRedirect = true;
+            
             if (context.User is ClaimsPrincipal principal)
             {
                 if (principal.Identity?.IsAuthenticated == false)

@@ -35,6 +35,8 @@ ProjectSection(SolutionItems) = preProject
 	..\.github\workflows\dotnet-develop.yml = ..\.github\workflows\dotnet-develop.yml
 EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{D59BBE80-D414-4AFD-BE3A-A50659F8E4C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,5 +156,6 @@ Global
 		{200559B3-BE72-456F-9166-883AFE614BA3} = {0E307CDC-C426-4BC9-A014-5E758957C1D2}
 		{EAA4B961-CF8A-4230-A2CE-962B0FA171FD} = {0E307CDC-C426-4BC9-A014-5E758957C1D2}
 		{33521FFB-D30A-40E5-8AA8-2E394CD01E76} = {A739953D-FA7F-4576-B229-A0E786686866}
+		{D59BBE80-D414-4AFD-BE3A-A50659F8E4C7} = {52EA03A8-55D8-4684-9E04-7F55EEBACF37}
 	EndGlobalSection
 EndGlobal
