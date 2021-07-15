@@ -1,0 +1,20 @@
+services:
+  cocoon:
+    build:
+      context: .
+      dockerfile: samples/BlazorCocoon/Dockerfile
+    depends_on:
+      - legacyapp
+    image: "cocoon/blazorapp:latest"
+    ports:
+      - "8080:80"
+  legacyapp:
+    mem_limit: 2g
+    build:
+      context: .
+      dockerfile: samples/Wingtip-Toys/Dockerfile
+    image: "cocoon/legacyapp:latest"
+    ports: 
+      - "8081:80"
+  
+  
