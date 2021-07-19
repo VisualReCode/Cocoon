@@ -86,12 +86,27 @@ The cookie names need to match the names in the application that's being facaded
 </system.web>
 ```
 
-# Wingtip-Toys - Windows docker container. 
+# Integration testing - Currently only Blazor WASM 
 
-Runs a completely self container windows container of the legacy application including the database server
 
+
+## Containers - Windows ##
+
+Run the following from the terminal in the root of the project folder. e.g C:\Cocoon\
+
+*Note : This will take some time to complete as it'll pull the windows server containers and build everyting required to run the legacy app and the modern app. After the initial build it'll be much quicker for future interations.*
 ```
-docker run -p 8080:80 -m 2gb -it win/app:latest
+docker-compose up 
 ```
 
+A blazor wasm endpoint will be available at localhost:8080 while the backend legacy app will be available on port 8081.
 
+## Running tests with playwrite
+
+Install the CLI tooling.
+```
+dotnet tool install --global Microsoft.Playwright.CLI
+
+w# Install browser packages etc.
+playwright install 
+```

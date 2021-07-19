@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/framework/sdk:4.8 as build
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8-windowsservercore-ltsc2019 as build
 
 # Copy files
 RUN md c:\build
@@ -10,7 +10,7 @@ RUN nuget restore samples\wingtip-toys
 RUN ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\msbuild.exe","samples/wingtip-toys/wingtiptoys.sln", "/t:Rebuild" ,"/p:outdir=c:\\build\\outproject\\", "/p:Configuration=Release"]
 
 ## Switch to a runtime image
-FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 as runtime
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019 as runtime
 WORKDIR C:/inetpub/wwwroot
 
 ## Install localdb

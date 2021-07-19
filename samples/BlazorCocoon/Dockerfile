@@ -9,16 +9,13 @@ COPY . c:/build
 RUN dotnet publish -c release samples/blazorcocoon/server/BlazorCocoon.Server.csproj -o c:/build/app -r win10-x64
 
 ## Switch to a runtime image
-FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 as runtime
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019 as runtime
 WORKDIR C:/inetpub/wwwroot
 
 COPY --from=build c:/build/app/ . 
-#COPY --from=build c:/build/samples/blazorcocoon/hostingbundle.exe .     
-# RUN ./hostingbundle.exe /quiet /install
-
 RUN Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-RUN choco install dotnet-5.0-sdk -y
+#RUN choco install dotnet-5.0-sdk -y
 RUN choco install dotnet-5.0-windowshosting -y
 RUN choco install urlrewrite -y
 
