@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.ReverseProxy.Service.Proxy;
+using Yarp.ReverseProxy.Service.Proxy;
 
 namespace ReCode.Cocoon.Proxy.Proxy
 {

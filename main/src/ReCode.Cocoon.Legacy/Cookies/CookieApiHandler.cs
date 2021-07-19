@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Web;
@@ -8,7 +9,13 @@ namespace ReCode.Cocoon.Legacy.Cookies
 {
     public class CookieApiHandler : IHttpHandler, IRequiresSessionState
     {
+        [ExcludeFromCodeCoverage]
         public void ProcessRequest(HttpContext context)
+        {
+            ProcessRequest(new HttpContextWrapper(context));
+        }
+        
+        public void ProcessRequest(HttpContextBase context)
         {
             var key = context.Request.QueryString["key"];
 
@@ -28,8 +35,8 @@ namespace ReCode.Cocoon.Legacy.Cookies
                 SetValue(context, key);
             }
         }
-
-        private static void SetValue(HttpContext context, string key)
+        
+        private static void SetValue(HttpContextBase context, string key)
         {
             var stream = context.Request.GetBufferedInputStream();
             var reader = new StreamReader(stream);
@@ -39,7 +46,7 @@ namespace ReCode.Cocoon.Legacy.Cookies
             context.Response.End();
         }
 
-        private static void GetValue(HttpContext context, string key)
+        private static void GetValue(HttpContextBase context, string key)
         {
             var cookie = context.Request.Cookies.Get(key);
             if (cookie is null)

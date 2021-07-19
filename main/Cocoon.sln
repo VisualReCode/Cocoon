@@ -36,6 +36,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Proxy.BlazorC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Proxy.CodeGenerator.Tests", "test\ReCode.Cocoon.Proxy.CodeGenerator.Tests\ReCode.Cocoon.Proxy.CodeGenerator.Tests.csproj", "{C198CA0A-D982-4295-BF18-8114F8E887F8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{6AD14C47-2BE5-4428-AB83-641684162C8A}"
+ProjectSection(SolutionItems) = preProject
+	..\.github\workflows\dotnet-develop.yml = ..\.github\workflows\dotnet-develop.yml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
