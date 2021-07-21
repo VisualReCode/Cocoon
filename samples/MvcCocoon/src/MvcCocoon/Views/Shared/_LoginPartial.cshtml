@@ -2,7 +2,7 @@
 @if (User.Identity.IsAuthenticated)
 {
   <li>
-    <a href="/Account/Manage" title="Manage your account">Hello, @User.Identity.Name !</a>
+    <a href="/Account/Manage" title="Manage your account" id="account-link">Hello, @User.Identity.Name !</a>
   </li>
   <li>
     <a href="/Account/Logout">Log out</a>

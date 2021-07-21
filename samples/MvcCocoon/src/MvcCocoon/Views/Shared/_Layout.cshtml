@@ -1,6 +1,5 @@
 ﻿@using System.Security.Claims
 @using MvcCocoon.Data
-@inject WingtipToysContext DbContext
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,18 +68,18 @@
     
     <div id="CategoryMenu" style="text-align: center">
         @{ bool first = true; }
-        @foreach (var category in DbContext.Categories)
-        {
-            @if (!first)
-            {
-                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            }
-            else
-            {
-                first = false;
-            }
-            <a href="~/Category/@category.CategoryName">@category.CategoryName</a>
-        }
+        @* @foreach (var category in DbContext.Categories) *@
+        @* { *@
+        @*     @if (!first) *@
+        @*     { *@
+        @*         <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span> *@
+        @*     } *@
+        @*     else *@
+        @*     { *@
+        @*         first = false; *@
+        @*     } *@
+        @*     <a href="~/Category/@category.CategoryName">@category.CategoryName</a> *@
+        @* } *@
     </div>
 
     <main role="main" class="pb-3">

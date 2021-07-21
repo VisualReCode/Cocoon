@@ -25,20 +25,11 @@ namespace MvcCocoon
         {
             services.AddCocoonSession();
             services.AddCocoonCookies();
-            services.AddScoped<ShoppingCart>();
 
-            services.AddAuthentication(CocoonAuthenticationDefaults.Scheme)
-                .AddCocoon();
-
-            var connectionString = Configuration.GetConnectionString("WingtipToys");
-            services.AddDbContextPool<WingtipToysContext>(builder =>
-            {
-                builder.UseSqlServer(connectionString);
-            });
+            services.AddAuthentication(CocoonAuthenticationDefaults.Scheme).AddCocoon();
 
             services.AddControllersWithViews();
             services.AddCocoonProxy(Configuration);
-
             services.AddHostedService<ActivityDebug>();
         }
 
@@ -50,10 +41,9 @@ namespace MvcCocoon
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();

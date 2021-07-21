@@ -6,10 +6,11 @@ using Xunit;
 
 namespace ReCode.Cocoon.Integration.Tests
 {
-    public class CocoonFunctionality
+    public class CocoonFunctionalityWasm : CocoonFunctionalityBase
     {
-        [Fact]
-        public async Task Pages_Available_In_Modern_App_Should_Serve_Before_Cocoon()
+        protected override string BaseUrl => "http://localhost:5000";
+        
+        public override async Task Pages_Available_In_Modern_App_Should_Serve_Before_Cocoon()
         {
             // Arrange
             using var playwright = await Playwright.CreateAsync();
@@ -21,15 +22,14 @@ namespace ReCode.Cocoon.Integration.Tests
 
             // Act
             var page = await browser.NewPageAsync();
-            await page.GotoAsync("http://localhost:8080");
+            await page.GotoAsync(BaseUrl);
             var result = await page.TextContentAsync("#app > div > div.main > div.content.px-4 > div > strong");
             
             // Assert
             result.Should().Be("How is Blazor working for you?");
         }
-        
-        [Fact]
-        public async Task Pages_UnAvailable_In_Modern_App_Should_Serve_From_Cocoon()
+
+        public override async Task Pages_UnAvailable_In_Modern_App_Should_Serve_From_Cocoon()
         {
             // Arrange
             using var playwright = await Playwright.CreateAsync();
@@ -41,7 +41,7 @@ namespace ReCode.Cocoon.Integration.Tests
 
             // Act
             var page = await browser.NewPageAsync();
-            await page.GotoAsync("http://localhost:8080/about");
+            await page.GotoAsync($"{BaseUrl}/about");
             var result = await page.TextContentAsync("#ctl01 > div.container.body-content > p");
             
             // Assert
@@ -49,7 +49,7 @@ namespace ReCode.Cocoon.Integration.Tests
         }
 
         [Fact]
-        public async Task Cocoon_Should_Honor_The_Auth_State_From_The_Legacy_App()
+        public override async Task Cocoon_Should_Honor_The_Auth_State_From_The_Legacy_App()
         {
             // Arrange
             using var playwright = await Playwright.CreateAsync();
@@ -62,7 +62,7 @@ namespace ReCode.Cocoon.Integration.Tests
             var page = await browser.NewPageAsync();
             
             // Login
-            await page.GotoAsync("http://localhost:8080/Account/Login");
+            await page.GotoAsync($"{BaseUrl}/Account/Login");
             await page.FillAsync("#MainContent_UserName", "admin");
             await page.FillAsync("#MainContent_Password", "Pa$$word");
             await page.ClickAsync("input[type='submit']");
@@ -95,7 +95,7 @@ namespace ReCode.Cocoon.Integration.Tests
             var page = await browser.NewPageAsync();
             
             // Login
-            await page.GotoAsync($"http://localhost:8080/session?sessiontext={sessionTest}");
+            await page.GotoAsync($"{BaseUrl}/session?sessiontext={sessionTest}");
             
             // Find the nav bar item, can take some time as blazor has to reinit
             var sessionLabel = await page.WaitForSelectorAsync("#MainContent_sessionTextLabel", new PageWaitForSelectorOptions
