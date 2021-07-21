@@ -1,14 +1,12 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Playwright;
-using Xunit;
 
 namespace ReCode.Cocoon.Integration.Tests
 {
-    public class CocoonFunctionalityCore : CocoonFunctionalityBase
+    public class CocoonFunctionalityBlazorServer : CocoonFunctionalityBase
     {
-        protected override string BaseUrl => "http://localhost:5003";
-
+        protected override string BaseUrl  => "http://localhost:5005";
         public override async Task Pages_Available_In_Modern_App_Should_Serve_Before_Cocoon()
         {
             // Arrange
@@ -22,10 +20,10 @@ namespace ReCode.Cocoon.Integration.Tests
             // Act
             var page = await browser.NewPageAsync();
             await page.GotoAsync(BaseUrl);
-            var result = await page.TextContentAsync("body > header > div > div > div.navbar-header > a");
+            var result = await page.TextContentAsync("body > div.page > div.navbar.navbar-inverse.navbar-fixed-top > div > div.navbar-header > a");
             
             // Assert
-            result.Should().Be("Wingtip Toys 2");
+            result.Should().Be("Wingtip Toys - BlazorServer");
         }
     }
 }
