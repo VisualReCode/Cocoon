@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Playwright;
@@ -8,13 +9,17 @@ namespace ReCode.Cocoon.Integration.Tests
     public abstract class CocoonFunctionalityBase
     {
         protected abstract string BaseUrl { get; }
+
+        protected BrowserTypeLaunchOptions BrowserTypeLaunchOptions { get; }
         
-
-        protected CocoonFunctionalityBase()
+        protected CocoonFunctionalityBase(bool headless)
         {
-            
+            BrowserTypeLaunchOptions = new BrowserTypeLaunchOptions
+            {
+                Headless = headless
+            };
         }
-
+        
         [Fact]
         public abstract Task Pages_Available_In_Modern_App_Should_Serve_Before_Cocoon();
 
@@ -24,13 +29,13 @@ namespace ReCode.Cocoon.Integration.Tests
             // Arrange
             using var playwright = await Playwright.CreateAsync();
 
-            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-            {
-                Headless = false
-            });
+            await using var browser = await playwright.Chromium.LaunchAsync(BrowserTypeLaunchOptions);
 
             // Act
-            var page = await browser.NewPageAsync();
+
+            await using var context = await browser.NewContextAsync();
+            var page = await context.NewPageAsync();
+            
             await page.GotoAsync($"{BaseUrl}/about");
             var result = await page.TextContentAsync("#ctl01 > div.container.body-content > p");
 
@@ -43,10 +48,7 @@ namespace ReCode.Cocoon.Integration.Tests
         {
             // Arrange
             using var playwright = await Playwright.CreateAsync();
-            await using var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
-            {
-                Headless = false
-            });
+            await using var browser = await playwright.Firefox.LaunchAsync(BrowserTypeLaunchOptions);
 
             // Act
             var page = await browser.NewPageAsync();

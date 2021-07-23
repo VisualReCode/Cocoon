@@ -20,7 +20,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/" id="appName">Wingtip Toys 2</a>
+                    <a class="navbar-brand" runat="server" href="~/" id="appName">Wingtip Toys 2 - MVCCore</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -38,22 +38,6 @@
                         @* <li><a href="~/ShoppingCart" ID="cartCount">&nbsp;</a></li> *@
                     </ul>
                     <partial name="_LoginPartial" />
-                    @* <asp:LoginView runat="server" ViewStateMode="Disabled"> *@
-                    @*     <AnonymousTemplate> *@
-                    @*         <ul class="nav navbar-nav navbar-right"> *@
-                    @*             <li><a runat="server" href="~/Account/Register">Register</a></li> *@
-                    @*             <li><a runat="server" href="~/Account/Login">Log in</a></li> *@
-                    @*         </ul> *@
-                    @*     </AnonymousTemplate> *@
-                    @*     <LoggedInTemplate> *@
-                    @*         <ul class="nav navbar-nav navbar-right"> *@
-                    @*             <li><a runat="server" href="~/Account/Manage" title="Manage your account">Hello, <%: Context.User.Identity.GetUserName()  %> !</a></li> *@
-                    @*             <li> *@
-                    @*                 <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" /> *@
-                    @*             </li> *@
-                    @*         </ul> *@
-                    @*     </LoggedInTemplate> *@
-                    @* </asp:LoginView> *@
                 </div>
             </div>
         </div>
@@ -64,22 +48,6 @@
             <img id="Image1" src="~/Images/logo.jpg" alt="Wingtip Toys Logo" />
         </a>  
         <br />  
-    </div>
-    
-    <div id="CategoryMenu" style="text-align: center">
-        @{ bool first = true; }
-        @* @foreach (var category in DbContext.Categories) *@
-        @* { *@
-        @*     @if (!first) *@
-        @*     { *@
-        @*         <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span> *@
-        @*     } *@
-        @*     else *@
-        @*     { *@
-        @*         first = false; *@
-        @*     } *@
-        @*     <a href="~/Category/@category.CategoryName">@category.CategoryName</a> *@
-        @* } *@
     </div>
 
     <main role="main" class="pb-3">

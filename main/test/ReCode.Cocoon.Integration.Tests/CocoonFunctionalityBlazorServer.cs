@@ -7,15 +7,17 @@ namespace ReCode.Cocoon.Integration.Tests
     public class CocoonFunctionalityBlazorServer : CocoonFunctionalityBase
     {
         protected override string BaseUrl  => "http://localhost:5005";
+        
+        public CocoonFunctionalityBlazorServer() : base(true)
+        {
+        }
+        
         public override async Task Pages_Available_In_Modern_App_Should_Serve_Before_Cocoon()
         {
             // Arrange
             using var playwright = await Playwright.CreateAsync();
 
-            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-            {
-                Headless = false
-            });
+            await using var browser = await playwright.Chromium.LaunchAsync(BrowserTypeLaunchOptions);
 
             // Act
             var page = await browser.NewPageAsync();
@@ -25,5 +27,7 @@ namespace ReCode.Cocoon.Integration.Tests
             // Assert
             result.Should().Be("Wingtip Toys - BlazorServer");
         }
+
+        
     }
 }
