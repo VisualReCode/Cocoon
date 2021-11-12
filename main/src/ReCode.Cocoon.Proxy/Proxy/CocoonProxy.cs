@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Yarp.ReverseProxy.Service.Proxy;
+using Yarp.ReverseProxy.Forwarder;
 
 namespace ReCode.Cocoon.Proxy.Proxy
 {
     public class CocoonProxy
     {
         private static readonly ActivitySource Source = new("ReCode.Cocoon.Proxy");
-        private readonly IHttpProxy _httpProxy;
+        private readonly IHttpForwarder _httpProxy;
         private readonly HashSet<string> _backendUrls;
         private readonly HttpMessageInvoker _httpClient;
         private readonly RedirectTransformer _transformer;
-        private readonly RequestProxyOptions _requestOptions;
+        private readonly ForwarderRequestConfig _requestOptions;
         private readonly string _destinationPrefix;
 
-        public CocoonProxy(IConfiguration configuration, ILogger<CocoonProxy> logger, IHttpProxy httpProxy, CocoonProxyOptions? proxyOptions)
+        public CocoonProxy(IConfiguration configuration, ILogger<CocoonProxy> logger, IHttpForwarder httpForwarder, CocoonProxyOptions? proxyOptions)
         {
-            _httpProxy = httpProxy;
+            _httpProxy = httpForwarder;
             _destinationPrefix = configuration
                 .GetValue<string>("Cocoon:Proxy:DestinationPrefix");
 
@@ -37,7 +37,7 @@ namespace ReCode.Cocoon.Proxy.Proxy
                 throw new InvalidOperationException("Invalid DestinationPrefix");
             }
 
-            logger.LogInformation($"Cocoon Proxy backend: {destinationPrefixUri}");
+            logger?.LogInformation($"Cocoon Proxy backend: {destinationPrefixUri}");
 
             _backendUrls = CocoonProxyExclusions.CreateExclusionSet(configuration);
 
@@ -62,9 +62,9 @@ namespace ReCode.Cocoon.Proxy.Proxy
             {
                 timeout = TimeSpan.FromSeconds(30);
             }
-            _requestOptions = new RequestProxyOptions
+            _requestOptions = new ForwarderRequestConfig
             {
-                Timeout = timeout
+                ActivityTimeout = timeout
             };
         }
 
@@ -79,7 +79,7 @@ namespace ReCode.Cocoon.Proxy.Proxy
             using var activity = Source.StartActivity("Proxy");
             activity?.SetTag("path", httpContext.Request.Path.ToString());
 
-            await _httpProxy.ProxyAsync(httpContext, _destinationPrefix, _httpClient, _requestOptions, _transformer);
+            await _httpProxy.SendAsync(httpContext, _destinationPrefix, _httpClient, _requestOptions, _transformer);
         }
     }
 }

@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.1" />
-    <PackageReference Include="Yarp.ReverseProxy" Version="1.0.0-preview.10.21168.2" />
+    <PackageReference Include="Yarp.ReverseProxy" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

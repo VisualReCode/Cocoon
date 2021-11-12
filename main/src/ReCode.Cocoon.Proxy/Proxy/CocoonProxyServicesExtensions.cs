@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ReCode.Cocoon.Proxy.Proxy;
-using Yarp.ReverseProxy.Service.Proxy;
+using Yarp.ReverseProxy.Forwarder;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<CocoonProxy>(provider => new CocoonProxy(
                 configuration, 
                 provider.GetService<ILogger<CocoonProxy>>(), 
-                provider.GetService<IHttpProxy>(), cocoonProxyOptions));
+                provider.GetService<IHttpForwarder>(), cocoonProxyOptions));
 
             return ReverseProxyBuilder(services, configuration);
         }
