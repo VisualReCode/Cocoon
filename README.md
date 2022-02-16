@@ -117,7 +117,7 @@ Once running the following endpoints will now be available:
 * http://localhost:5003 - MVC
 * http://localhost:5005 - BlazorServer
 
-## Running tests with playwrite
+## Running tests with PlayWright
 
 Install the CLI tooling.
 ```
