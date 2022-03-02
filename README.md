@@ -18,6 +18,30 @@ An implementation of the Strangler Fig pattern for ASP.NET Core
 </system.webServer>
 ```
 
+### Amend `Startup.Auth.cs`
+
+In the file `/App_Start/Startup.Auth.cs`, add delegate to the `OnApplyRedirect` property that supresses the redirect to the login URL for `/facadeauth` requests.
+```c#
+app.UseCookieAuthentication(new CookieAuthenticationOptions
+{
+    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+    LoginPath = new PathString("/Account/Login"),
+    Provider = new CookieAuthenticationProvider
+    {
+        OnApplyRedirect = context =>
+        {
+            /* This prevents the cookie auth model trying to redirect on a 401 */
+            if(context.Request.Uri.ToString().Contains("facadeauth") && context.Response.StatusCode == 401)
+            {
+                return;
+            }
+                        
+            context.Response.Redirect(context.RedirectUri);
+        }
+    }
+});
+```
+
 ### Disable MVC routing for the new handlers
 
 ```
