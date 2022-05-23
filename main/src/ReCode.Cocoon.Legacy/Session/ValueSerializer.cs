@@ -8,10 +8,14 @@ namespace ReCode.Cocoon.Legacy.Session
 {
     public static class ValueSerializer
     {
+        private static readonly byte[] Empty = new byte[0];
+        
         public static byte[] Serialize(object value)
         {
             switch (value)
             {
+                case null:
+                    return Empty;
                 case string str:
                     return Encoding.UTF8.GetBytes(str);
                 case short i16:
