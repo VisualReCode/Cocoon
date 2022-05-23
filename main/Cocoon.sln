@@ -28,6 +28,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{19C51172-6F93-479C-BF81-EDA51D6597AE}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		version.json = version.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Proxy.BlazorCodeGen", "src\ReCode.Cocoon.Proxy.BlazorCodeGen\ReCode.Cocoon.Proxy.BlazorCodeGen.csproj", "{7AFD9FAF-92A5-4EC6-BEA4-EED5C521A6E1}"

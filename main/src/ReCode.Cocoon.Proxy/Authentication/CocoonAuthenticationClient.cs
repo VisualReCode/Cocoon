@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -15,8 +14,6 @@ namespace ReCode.Cocoon.Proxy.Authentication
 {
     public class CocoonAuthenticationClient
     {
-        private static readonly ActivitySource Source = new ("ReCode.Cocoon.Proxy");
-        
         private readonly HttpClient _httpClient;
         private readonly IOptionsMonitor<CocoonAuthenticationOptions> _options;
         private readonly ILogger<CocoonAuthenticationClient> _logger;
@@ -30,7 +27,7 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
         public async Task<AuthenticateResult> AuthenticateAsync(HttpRequest request)
         {
-            using var activity = Source.StartActivity("Authenticate");
+            using var activity = ProxyActivitySource.StartActivity("Authenticate");
             
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, "");
 
@@ -38,7 +35,7 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
             try
             {
-                var response = await _httpClient.SendAsync(requestMessage);
+                var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
 
                 activity?.SetTag("ResponseStatusCode", (int)response.StatusCode);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,11 @@ namespace ReCode.Cocoon.Proxy.Authentication
             {
                 var options = provider.GetRequiredService<IOptionsMonitor<CocoonAuthenticationOptions>>();
                 client.BaseAddress = new Uri(options.CurrentValue.BackendApiUrl);
-            });
+            })
+                .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+                {
+                    UseCookies = false,
+                });
             
             builder.AddScheme<CocoonAuthenticationOptions, CocoonAuthenticationHandler>(CocoonAuthenticationDefaults.Scheme, null);
 

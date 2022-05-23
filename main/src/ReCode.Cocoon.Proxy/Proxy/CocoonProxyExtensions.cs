@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
+﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using ReCode.Cocoon.Proxy.Proxy;
 
-namespace ReCode.Cocoon.Proxy.Proxy
+// ReSharper disable once CheckNamespace
+namespace Microsoft.AspNetCore.Routing
 {
+    [PublicAPI]
     public static class CocoonProxyExtensions
     {
         public static IEndpointRouteBuilder MapCocoonProxy(this IEndpointRouteBuilder endpoints)

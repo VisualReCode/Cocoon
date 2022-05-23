@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using ReCode.Cocoon.Proxy.Session;
@@ -6,6 +7,7 @@ using ReCode.Cocoon.Proxy.Session;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
 {
+    [PublicAPI]
     public static class CocoonSessionExtensions
     {
         public static IServiceCollection AddCocoonSession(this IServiceCollection services)

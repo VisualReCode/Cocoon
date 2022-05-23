@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
-using ReCode.Cocoon.Proxy.Session;
 
 namespace ReCode.Cocoon.Proxy.Cookies
 {
@@ -14,7 +11,7 @@ namespace ReCode.Cocoon.Proxy.Cookies
     {
         private readonly HttpClient _client;
 
-        public CocoonCookieClient(HttpClient client, IOptionsMonitor<CocoonSessionOptions> options)
+        public CocoonCookieClient(HttpClient client)
         {
             _client = client;
         }

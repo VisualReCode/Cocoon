@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using MessagePack;
@@ -36,6 +37,8 @@ namespace ReCode.Cocoon.Legacy.Session
 
         public static object Deserialize(Type type, byte[] bytes)
         {
+            if (bytes.Length == 0) return null;
+            
             if (Deserializers.TryGetValue(type, out var deserializer))
             {
                 return deserializer(bytes);
@@ -95,6 +98,7 @@ namespace ReCode.Cocoon.Legacy.Session
 
             var method = typeof(SessionValueDeserializer)
                 .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static);
+            Debug.Assert(method != null, "method != null");
             var genericMethod = method.MakeGenericMethod(type);
             return (Func<byte[], object>)genericMethod.CreateDelegate(typeof(Func<byte[], object>));
         }

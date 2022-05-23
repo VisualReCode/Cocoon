@@ -1,11 +1,13 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using ReCode.Cocoon.Proxy.Cookies;
 using ReCode.Cocoon.Proxy.Session;
 
-namespace ReCode.Cocoon.Proxy.Cookies
+namespace Microsoft.Extensions.DependencyInjection
 {
+    [PublicAPI]
     public static class CocoonCookieExtensions
     {
         public static IServiceCollection AddCocoonCookies(this IServiceCollection services)

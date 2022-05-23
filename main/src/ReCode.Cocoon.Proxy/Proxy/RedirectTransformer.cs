@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Yarp.ReverseProxy.Service.Proxy;
+using Yarp.ReverseProxy.Forwarder;
 
 namespace ReCode.Cocoon.Proxy.Proxy
 {
@@ -15,8 +15,10 @@ namespace ReCode.Cocoon.Proxy.Proxy
             _destinationPrefix = destinationPrefix;
         }
 
-        public override async Task TransformResponseAsync(HttpContext context, HttpResponseMessage response)
+        public override async ValueTask<bool> TransformResponseAsync(HttpContext context, HttpResponseMessage? response)
         {
+            if (response is null) return await base.TransformResponseAsync(context, response);
+            
             var location = response.Headers.Location;
             
             if (location?.IsAbsoluteUri == true && _destinationPrefix.IsBaseOf(location))
@@ -25,6 +27,8 @@ namespace ReCode.Cocoon.Proxy.Proxy
                 response.Headers.Location = new Uri(relative, UriKind.Relative);
             }
             await base.TransformResponseAsync(context, response);
+
+            return true;
         }
     }
 }

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using JetBrains.Annotations;
 
 namespace ReCode.Cocoon.Proxy.Session
 {
+    [PublicAPI]
     public class CocoonSession : IAsyncDisposable
     {
-        private static readonly ActivitySource Source = new("ReCode.Cocoon.Proxy");
         private readonly CocoonSessionClient _client;
         private readonly HttpContext _context;
         private readonly object _mutex = new();
         private Dictionary<string, byte[]>? _original;
-        private Dictionary<string, object>? _cache;
+        private Dictionary<string, object?>? _cache;
         private int _disposed;
 
         public CocoonSession(CocoonSessionClient client, IHttpContextAccessor contextAccessor)
@@ -23,18 +23,18 @@ namespace ReCode.Cocoon.Proxy.Session
             _context = contextAccessor.HttpContext;
         }
 
-        public ValueTask<T> GetAsync<T>(string key)
+        public ValueTask<T?> GetAsync<T>(string key)
         {
             EnsureCache();
             lock (_mutex)
             {
                 if (_cache!.TryGetValue(key, out var value))
                 {
-                    return new ValueTask<T>((T) value);
+                    return new ValueTask<T?>(value is null ? default : (T)value);
                 }
             }
             
-            return new ValueTask<T>(Get<T>(key));
+            return new ValueTask<T?>(Get<T>(key));
         }
 
         public void Set<T>(string key, T value)
@@ -43,9 +43,9 @@ namespace ReCode.Cocoon.Proxy.Session
             CacheValue(key, value);
         }
 
-        private async Task<T> Get<T>(string key)
+        private async Task<T?> Get<T>(string key)
         {
-            using var activity = Source.StartActivity("GetSession");
+            using var activity = ProxyActivitySource.StartActivity("GetSession");
             activity?.AddTag("key", key);
             
             var bytes = await _client.GetAsync(key, _context.Request);
@@ -55,7 +55,7 @@ namespace ReCode.Cocoon.Proxy.Session
             
             CacheValue(key, bytes, value);
 
-            return (T)value;
+            return value is null ? default : (T)value;
         }
 
         private void CacheValue(string key, byte[] bytes, object? value)
@@ -67,7 +67,7 @@ namespace ReCode.Cocoon.Proxy.Session
             }
         }
 
-        private void CacheValue(string key, object value)
+        private void CacheValue(string key, object? value)
         {
             lock (_mutex)
             {
@@ -79,7 +79,7 @@ namespace ReCode.Cocoon.Proxy.Session
         {
             lock (_mutex)
             {
-                _cache ??= new Dictionary<string, object>();
+                _cache ??= new Dictionary<string, object?>();
                 _original ??= new Dictionary<string, byte[]>();
             }
         }
@@ -90,7 +90,7 @@ namespace ReCode.Cocoon.Proxy.Session
             
             if (Interlocked.Increment(ref _disposed) > 1) return default;
             
-            using var activity = Source.StartActivity("SaveSession");
+            using var activity = ProxyActivitySource.StartActivity("SaveSession");
 
             List<Task>? tasks = null;
             

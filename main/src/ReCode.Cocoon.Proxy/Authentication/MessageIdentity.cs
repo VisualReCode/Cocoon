@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using JetBrains.Annotations;
 using MessagePack;
 
 namespace ReCode.Cocoon.Proxy.Authentication
 {
     [MessagePackObject]
+    [PublicAPI]
     public class MessageIdentity
     {
         [Key(0)]

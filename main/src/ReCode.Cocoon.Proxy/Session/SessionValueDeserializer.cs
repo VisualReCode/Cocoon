@@ -12,7 +12,7 @@ namespace ReCode.Cocoon.Proxy.Session
     {
         public static object? Deserialize<T>(byte[]? bytes)
         {
-            if (bytes is null) return default;
+            if (bytes is not {Length: > 0}) return default;
             
             if (Deserializers.TryGetValue(typeof(T), out var deserializer))
             {

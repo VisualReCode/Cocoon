@@ -7,7 +7,7 @@ namespace ReCode.Cocoon.Proxy.Cookies
 {
     public class CocoonCookies : ICocoonCookies
     {
-        private CocoonCookieClient _client;
+        private readonly CocoonCookieClient _client;
         private readonly IHttpContextAccessor _contextAccessor;
 
         public CocoonCookies(CocoonCookieClient client, IHttpContextAccessor contextAccessor)

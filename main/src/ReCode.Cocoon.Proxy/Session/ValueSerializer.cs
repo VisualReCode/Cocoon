@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Text;
+using JetBrains.Annotations;
 using MessagePack;
 using MessagePack.Resolvers;
 
@@ -9,12 +10,15 @@ using MessagePack.Resolvers;
 
 namespace ReCode.Cocoon.Proxy.Session
 {
+    [PublicAPI]
     public static class ValueSerializer
     {
-        public static byte[] Serialize(object value)
+        public static byte[] Serialize(object? value)
         {
             switch (value)
             {
+                case null:
+                    return Array.Empty<byte>();
                 case string str:
                     return Encoding.UTF8.GetBytes(str);
                 case short i16:
