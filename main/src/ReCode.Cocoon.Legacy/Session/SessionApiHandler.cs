@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Web;
 using System.Web.SessionState;
@@ -7,7 +8,13 @@ namespace ReCode.Cocoon.Legacy.Session
 {
     public class SessionApiHandler : IHttpHandler, IRequiresSessionState
     {
+        [ExcludeFromCodeCoverage]
         public void ProcessRequest(HttpContext context)
+        {
+            ProcessRequest(new HttpContextWrapper(context));
+        }
+        
+        public void ProcessRequest(HttpContextBase context)
         {
             var key = context.Request.QueryString["key"];
 
@@ -35,7 +42,7 @@ namespace ReCode.Cocoon.Legacy.Session
             }
         }
 
-        private static void SetValue(HttpContext context, string key, string typeName)
+        private static void SetValue(HttpContextBase context, string key, string typeName)
         {
             if (SessionValueDeserializer.GetTypeFromName(typeName, out var type)) return;
 
@@ -52,7 +59,7 @@ namespace ReCode.Cocoon.Legacy.Session
             context.Session[key] = value;
         }
 
-        private static void GetValue(HttpContext context, string key)
+        private static void GetValue(HttpContextBase context, string key)
         {
             var value = context.Session[key];
             if (value is null)

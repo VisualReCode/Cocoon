@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using System.Web;
 using MessagePack;
 using ReCode.Cocoon.Legacy.Auth;
@@ -7,8 +8,17 @@ namespace ReCode.Cocoon.Legacy.Auth
 {
     public class AuthApiHandler : IHttpHandler
     {
+        [ExcludeFromCodeCoverage]
         public void ProcessRequest(HttpContext context)
         {
+            ProcessRequest(new HttpContextWrapper(context));
+        }
+        
+        public void ProcessRequest(HttpContextBase context)
+        {
+            context.Response.TrySkipIisCustomErrors = true;
+            context.Response.SuppressFormsAuthenticationRedirect = true;
+            
             if (context.User is ClaimsPrincipal principal)
             {
                 if (principal.Identity?.IsAuthenticated == false)

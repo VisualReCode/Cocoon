@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System;
+using System.Net;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
@@ -17,6 +19,19 @@ namespace WingtipToys
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
+                Provider = new CookieAuthenticationProvider
+                {
+                    OnApplyRedirect = context =>
+                    {
+                        /* This prevents the cookie auth model trying to redirect on a 401 */
+                        if(context.Request.Uri.ToString().Contains("facadeauth") && context.Response.StatusCode == 401)
+                        {
+                            return;
+                        }
+                        
+                        context.Response.Redirect(context.RedirectUri);
+                    }
+                }
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
