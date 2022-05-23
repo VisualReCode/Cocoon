@@ -17,7 +17,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
       working-directory: .\main
@@ -34,9 +34,12 @@ jobs:
         -p:AssemblyInformationalVersion=${{ steps.nbgv.outputs.AssemblyInformationalVersion }}
         --no-restore
       working-directory: .\main
-    - name: Test
+    - name: ProxyTests
       run: dotnet test -c Release --no-build --verbosity normal .\test\ReCode.Cocoon.Proxy.Tests
       working-directory: .\main
+    - name: LegacyTests
+      run: |
+        ~/.nuget/packages/xunit.runner.console/2.4.1/tools/net472/xunit.console.exe $Env:GITHUB_WORKSPACE\main\test\ReCode.Cocoon.Legacy.Tests\bin\Release\net45\ReCode.Cocoon.Legacy.Tests.dll
     - name: PackLegacy
       run: >
         dotnet pack --configuration Release --no-build
