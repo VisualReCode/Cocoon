@@ -1,0 +1,41 @@
+﻿@model MvcCocoon.Models.Admin.AddProductViewModel
+
+@{
+  ViewBag.Title = "title";
+  Layout = "_Layout";
+}
+
+<div class="row">
+  <div class="col-12">
+    <h1>Add a New Product</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form asp-action="AddProduct">
+      <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label asp-for="Description">Description</label>
+        <input asp-for="Description" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label asp-for="Price">Price</label>
+        <input asp-for="Price" type="number" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label asp-for="Price">Category</label>
+        <select asp-for="CategoryId" class="form-control">
+          @foreach (var category in Model.Categories)
+          {
+            <option value="@category.CategoryID">@category.CategoryName</option>
+          }
+        </select>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</div>

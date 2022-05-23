@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using BlazorCocoon.Server.Data;
+using BlazorCocoon.Server.Services;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using ReCode.Cocoon.Proxy.Authentication;
+using ReCode.Cocoon.Proxy.Blazor;
 
 namespace BlazorCocoon.Server
 {
@@ -22,10 +26,19 @@ namespace BlazorCocoon.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCocoonSession();
+            services.AddScoped<ShoppingCart>();
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddCocoonProxy(Configuration);
-            services.AddAuthentication(CocoonAuthenticationDefaults.Scheme).AddCocoon();
+            
+            var connectionString = Configuration.GetConnectionString("WingtipToys");
+            services.AddDbContextPool<WingtipToysContext>(builder =>
+            {
+                builder.UseSqlServer(connectionString);
+            });
+            
+            services.AddAuthentication(CocoonAuthenticationDefaults.Scheme)
+                .AddCocoon();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,8 +52,11 @@ namespace BlazorCocoon.Server
             else
             {
                 app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
@@ -53,7 +69,7 @@ namespace BlazorCocoon.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapCocoonProxyWithBlazor(typeof(Client.Program));
+                endpoints.MapCocoonProxyWithBlazor(typeof(CocoonBlazorRouteTesterManual));
             });
         }
     }
