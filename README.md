@@ -8,7 +8,7 @@ An implementation of the Strangler Fig pattern for ASP.NET Core
 
 ### Amend the web.config to load the handlers
 
-```
+```xml
 <system.webServer>
     <handlers>
         <add name="FacadeSession" verb="*" path="facadesession" type="ReCode.Cocoon.Legacy.Session.SessionApiHandler, ReCode.Cocoon.Legacy, Version=1.0.0.0, Culture=neutral"  preCondition="integratedMode"/>
@@ -44,7 +44,7 @@ app.UseCookieAuthentication(new CookieAuthenticationOptions
 
 ### Disable MVC routing for the new handlers
 
-```
+```c#
 public static void RegisterRoutes(RouteCollection routes)
 {
     routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
@@ -72,7 +72,7 @@ public static void RegisterRoutes(RouteCollection routes)
 
 For authentication and session to work the names Cocoon uses between the applications must be aligned. In the new application look at the appSettings files.
 
-```
+```json
 "Cocoon": {
     "Proxy": {
       "DestinationPrefix": "https://localhost:44302/"
@@ -98,13 +98,13 @@ For authentication and session to work the names Cocoon uses between the applica
 
 The cookie names need to match the names in the application that's being facaded. They can normally be found in the web.config
 
-```
+```xml
  <authentication mode="Forms">
     <forms loginUrl="~/Account/LogOn" timeout="432000" name="COOKIENAME" slidingExpiration="true" />
 </authentication>
 ```
 
-```
+```xml
 <system.web>
     <sessionState regenerateExpiredSessionId="false" cookieless="UseCookies" cookieName="COOKIENAME" />
 </system.web>
@@ -131,7 +131,6 @@ If you want to build the images individually you can run the following from the 
 docker build -t cocoon/blazorapp:latest -f samples/BlazorCocoon/Dockerfile .
 docker build -t cocoon/mvccore:latest -f samples/mvccocoon/src/mvccocoon/Dockerfile .
 docker build -t cocoon/blazorserver:latest -f samples/BlazorServerCocoon/src/BlazorServerCocoon/Dockerfile .
-
 ```
 This is much quicker if you're amending individual applications.
 
