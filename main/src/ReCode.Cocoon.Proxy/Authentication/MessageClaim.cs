@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
+using JetBrains.Annotations;
 using MessagePack;
+#pragma warning disable CS8618
 
 namespace ReCode.Cocoon.Proxy.Authentication
 {
     [MessagePackObject]
+    [PublicAPI]
     public class MessageClaim
     {
         [Key(0)]

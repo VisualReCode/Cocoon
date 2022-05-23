@@ -1,5 +1,8 @@
-﻿namespace ReCode.Cocoon.Proxy.Session
+﻿using JetBrains.Annotations;
+
+namespace ReCode.Cocoon.Proxy.Session
 {
+    [PublicAPI]
     public class CocoonSessionOptions
     {
         public string BackendApiUrl { get; set; } = null!;

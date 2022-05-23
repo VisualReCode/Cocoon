@@ -85,3 +85,46 @@ The cookie names need to match the names in the application that's being facaded
     <sessionState regenerateExpiredSessionId="false" cookieless="UseCookies" cookieName="COOKIENAME" />
 </system.web>
 ```
+
+# Integration testing
+
+## Containers - Windows ##
+
+Run the following from the terminal in the root of the project folder. e.g C:\Cocoon\
+
+*Note : This will take some time to complete as it'll pull the windows server containers and build everyting required to run the legacy app and the modern app. After the initial build it'll be much quicker for future interations.*
+```
+docker-compose up
+
+// Use the following if you want to rebuild the images
+
+docker-compose up --build
+```
+
+If you want to build the images individually you can run the following from the root of cocoon:
+
+```
+docker build -t cocoon/blazorapp:latest -f samples/BlazorCocoon/Dockerfile .
+docker build -t cocoon/mvccore:latest -f samples/mvccocoon/src/mvccocoon/Dockerfile .
+docker build -t cocoon/blazorserver:latest -f samples/BlazorServerCocoon/src/BlazorServerCocoon/Dockerfile .
+
+```
+This is much quicker if you're amending individual applications.
+
+Once running the following endpoints will now be available:
+
+* http://localhost:5000 - Wasm
+* http://localhost:5003 - MVC
+* http://localhost:5005 - BlazorServer
+
+## Running tests with playwrite
+
+Install the CLI tooling.
+```
+dotnet tool install --global Microsoft.Playwright.CLI
+
+// Install browser packages etc.
+
+playwright install 
+```
+You can now run the tests inside the test/integration folder.

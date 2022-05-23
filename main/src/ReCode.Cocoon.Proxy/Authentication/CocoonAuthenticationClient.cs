@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -15,8 +14,6 @@ namespace ReCode.Cocoon.Proxy.Authentication
 {
     public class CocoonAuthenticationClient
     {
-        private static readonly ActivitySource Source = new ("ReCode.Cocoon.Proxy");
-        
         private readonly HttpClient _httpClient;
         private readonly IOptionsMonitor<CocoonAuthenticationOptions> _options;
         private readonly ILogger<CocoonAuthenticationClient> _logger;
@@ -30,7 +27,7 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
         public async Task<AuthenticateResult> AuthenticateAsync(HttpRequest request)
         {
-            using var activity = Source.StartActivity("Authenticate");
+            using var activity = ProxyActivitySource.StartActivity("Authenticate");
             
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, "");
 
@@ -94,7 +91,9 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
         private void CopyOptionsHeaders(HttpRequest request, HttpRequestMessage requestMessage)
         {
-            foreach (var headerName in _options.CurrentValue.Headers!)
+            if (_options.CurrentValue?.Headers is not { Length: > 0 } headers) return;
+            
+            foreach (var headerName in headers)
             {
                 if (request.Headers.TryGetValue(headerName, out var values))
                 {
@@ -115,7 +114,9 @@ namespace ReCode.Cocoon.Proxy.Authentication
 
         private void CopyOptionsCookies(HttpRequest request, HttpRequestMessage requestMessage)
         {
-            foreach (var cookieName in _options.CurrentValue.Cookies!)
+            if (_options.CurrentValue?.Cookies is not { Length: > 0 } cookies) return;
+            
+            foreach (var cookieName in cookies)
             {
                 if (request.Cookies.TryGetValue(cookieName, out var value))
                 {

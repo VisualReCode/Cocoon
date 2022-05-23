@@ -29,13 +29,13 @@
                             c.Type == ClaimTypes.Role
                             && c.Value == "Administrator"))
                         {
-                        <li><a href="~/Admin/AdminPage">Admin</a></li>
+                        <li><a href="/Admin/AdminPage">Admin</a></li>
                         }
-                        <li><a href="~/">Home</a></li>
-                        <li><a href="~/About">About</a></li>
-                        <li><a href="~/Contact">Contact</a></li>
-                        <li><a href="~/ProductList">Products</a></li>
-                        <li><cart-link href="~/ShoppingCart"></cart-link></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/About">About</a></li>
+                        <li><a href="/Contact">Contact</a></li>
+                        <li><a href="/ProductList">Products</a></li>
+                        <li><cart-link href="/ShoppingCart"></cart-link></li>
                         @* <li><a href="~/ShoppingCart" ID="cartCount">&nbsp;</a></li> *@
                     </ul>
                     <partial name="_LoginPartial" />

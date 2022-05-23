@@ -1,21 +1,6 @@
 ﻿{
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:9268",
-      "sslPort": 44371
-    }
-  },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "Facade": {
+    "MvcCocoon": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

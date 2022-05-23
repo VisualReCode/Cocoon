@@ -69,7 +69,7 @@ namespace BlazorCocoon.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapCocoonProxyWithBlazor(typeof(CocoonBlazorRouteTester));
+                endpoints.MapCocoonProxyWithBlazor(typeof(CocoonBlazorRouteTesterManual));
             });
         }
     }

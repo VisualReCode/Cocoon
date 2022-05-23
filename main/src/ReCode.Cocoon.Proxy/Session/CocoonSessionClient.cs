@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +19,7 @@ namespace ReCode.Cocoon.Proxy.Session
 
         public async Task<byte[]?> GetAsync(string key, HttpRequest request)
         {
-            var message = CreateMessage(key, request, HttpMethod.Get, $"?key={key}");
+            var message = CreateMessage(request, HttpMethod.Get, $"?key={key}");
 
             using var response = await _client.SendAsync(message);
             if (!response.IsSuccessStatusCode)
@@ -35,14 +34,14 @@ namespace ReCode.Cocoon.Proxy.Session
         {
             var uri = $"?key={key}&type={type.AssemblyQualifiedName}";
             
-            var message = CreateMessage(key, request, HttpMethod.Put, uri);
+            var message = CreateMessage(request, HttpMethod.Put, uri);
 
             message.Content = new ByteArrayContent(bytes);
 
             await _client.SendAsync(message);
         }
 
-        private HttpRequestMessage CreateMessage(string key, HttpRequest request, HttpMethod httpMethod, string? requestUri)
+        private HttpRequestMessage CreateMessage(HttpRequest request, HttpMethod httpMethod, string? requestUri)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri);
 
