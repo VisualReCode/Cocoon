@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Options;
 
 namespace ReCode.Cocoon.Proxy.Authentication
 {
+    [PublicAPI]
     public class CocoonAuthenticationHandler : AuthenticationHandler<CocoonAuthenticationOptions>
     {
         private readonly CocoonAuthenticationClient _client;

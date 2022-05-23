@@ -36,6 +36,8 @@ namespace ReCode.Cocoon.Legacy.Session
 
         public static object Deserialize(Type type, byte[] bytes)
         {
+            if (bytes is not { Length: > 0 }) return null;
+            
             if (Deserializers.TryGetValue(type, out var deserializer))
             {
                 return deserializer(bytes);
