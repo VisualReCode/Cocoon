@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -12,17 +13,18 @@ namespace ReCode.Cocoon.Proxy.Cookies
         {
             services.AddHttpContextAccessor();
             services.AddOptions<CocoonCookieOptions>()
-                .Configure<IConfiguration>((options, configuration) =>
-                {
-                    configuration.GetSection("Cocoon:Cookies").Bind(options);
-                })
+                .Configure<IConfiguration>((options, configuration) => { configuration.GetSection("Cocoon:Cookies").Bind(options); })
                 .Validate(o => Uri.TryCreate(o.BackendApiUrl, UriKind.Absolute, out _),
                     "Invalid BackendApiUrl");
             services.AddHttpClient<CocoonCookieClient>((provider, client) =>
-            {
-                var options = provider.GetRequiredService<IOptionsMonitor<CocoonCookieOptions>>();
-                client.BaseAddress = new Uri(options.CurrentValue.BackendApiUrl);
-            });
+                {
+                    var options = provider.GetRequiredService<IOptionsMonitor<CocoonCookieOptions>>();
+                    client.BaseAddress = new Uri(options.CurrentValue.BackendApiUrl!);
+                })
+                .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+                {
+                    UseCookies = false
+                });
             services.AddScoped<ICocoonCookies, CocoonCookies>();
             return services;
         }

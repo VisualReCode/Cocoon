@@ -1,0 +1,15 @@
+﻿@using BlazorCocoon.Shared
+@inject HttpClient Http
+
+<li><a href="/ShoppingCart" ID="cartCount">Cart (@_cartCount)</a></li>
+
+@code {
+                  
+    private int _cartCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var cartCount = await Http.GetFromJsonAsync<CartCount>("/api/cart/count");
+        _cartCount = cartCount!.Count;
+    }
+}

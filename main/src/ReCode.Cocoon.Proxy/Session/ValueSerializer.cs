@@ -4,17 +4,17 @@ using System.Text;
 using MessagePack;
 using MessagePack.Resolvers;
 
-// using System.Buffers;
-// using System.Buffers.Text;
-
 namespace ReCode.Cocoon.Proxy.Session
 {
     public static class ValueSerializer
     {
-        public static byte[] Serialize(object value)
+        private static readonly byte[] Empty = Array.Empty<byte>();
+        public static byte[] Serialize(object? value)
         {
             switch (value)
             {
+                case null:
+                    return Empty;
                 case string str:
                     return Encoding.UTF8.GetBytes(str);
                 case short i16:

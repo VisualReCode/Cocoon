@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Proxy.BlazorW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Proxy.BlazorWasmAuth", "..\..\main\src\ReCode.Cocoon.Proxy.BlazorWasmAuth\ReCode.Cocoon.Proxy.BlazorWasmAuth.csproj", "{D84E0BFC-85F2-43E0-8F70-C3A129CCF032}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCode.Cocoon.Proxy.BlazorCodeGen", "..\..\main\src\ReCode.Cocoon.Proxy.BlazorCodeGen\ReCode.Cocoon.Proxy.BlazorCodeGen.csproj", "{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,18 @@ Global
 		{D84E0BFC-85F2-43E0-8F70-C3A129CCF032}.Release|x64.Build.0 = Release|Any CPU
 		{D84E0BFC-85F2-43E0-8F70-C3A129CCF032}.Release|x86.ActiveCfg = Release|Any CPU
 		{D84E0BFC-85F2-43E0-8F70-C3A129CCF032}.Release|x86.Build.0 = Release|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Debug|x64.Build.0 = Debug|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Debug|x86.Build.0 = Debug|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Release|x64.ActiveCfg = Release|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Release|x64.Build.0 = Release|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE2242A3-AEF6-4145-8A59-8C0AABF5D014}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
